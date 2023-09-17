@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import Storage from "../storage";
 
 import LibraryPage from "../pages/LibraryPage";
 import AddBookPage from "../pages/AddBookPage";
 import EditBookPage from "../pages/EditBookPage";
-import BookNotesPage from "../pages/BookNotesPage"
+import BookNotesPage from "../pages/BookNotesPage";
 import EditNotePage from "../pages/EditNotePage";
 
 export class Book {
@@ -11,18 +12,21 @@ export class Book {
   author: string;
   publishedYear: number;
   pages: number;
-  notes: Note[]
+  edition: string;
+  notes: Note[];
   constructor(
     title: string,
     author: string,
     publishedYear: number,
     pages: number,
+    edition: string,
   ) {
     this.title = title;
     this.author = author;
     this.publishedYear = publishedYear;
     this.pages = pages;
-    this.notes = []
+    this.edition = edition;
+    this.notes = [];
   }
 } // Book Class Definition
 
@@ -50,9 +54,16 @@ export class Note {
   }
 } // Book Class Definition
 
+const storage = new Storage();
+
+const theHobbit = new Book("The Hobbit", "J.R.R Tolkien", 1937, 310, "One");
+
 function App() {
+  const storedLib: Book[] = storage.hasLocalStorage()
+    ? storage.loadStorage()
+    : [theHobbit];
   const [page, setPage] = useState<React.ReactElement>(<></>);
-  const [library, setLibrary] = useState<Book[]>([]);
+  const [library, setLibrary] = useState<Book[]>(storedLib);
 
   function pushBook(book: Book): void {
     setLibrary((oldLib: Book[]) => [...oldLib, book]);
@@ -87,21 +98,34 @@ function App() {
     setPage(<EditBookPage book={book} toLibrary={goToLibrary} />);
   }
 
-  function editNote(note: Note, book: Book){
-    setPage(<EditNotePage note={note} book={book} toBookNotes={bookNotes}/>)
+  function editNote(note: Note, book: Book): void {
+    setPage(<EditNotePage note={note} book={book} toBookNotes={bookNotes} />);
   }
 
   function bookNotes(book: Book): void {
-    setPage(<BookNotesPage book={book} toLibrary={goToLibrary} editNote={editNote} renderNotesPage={bookNotes}/>)
+    setPage(
+      <BookNotesPage
+        book={book}
+        toLibrary={goToLibrary}
+        editNote={editNote}
+        renderNotesPage={bookNotes}
+      />,
+    );
   }
 
   function goToLibrary(): void {
     setPage(libraryPageComponent);
   }
 
+  function save(): void {
+    storage.saveStorage(library);
+  }
+
   useEffect(() => {
     setPage(libraryPageComponent);
   }, [library]);
+
+  save();
 
   return <>{page}</>;
 }

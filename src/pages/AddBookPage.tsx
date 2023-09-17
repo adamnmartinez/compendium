@@ -15,8 +15,10 @@ export default function AddBookPage(props: {
             event.currentTarget.author.value,
             event.currentTarget.year.value,
             event.currentTarget.pages.value,
+            event.currentTarget.edition.value,
           );
           props.pushFunc(newBook);
+          props.toLibrary();
         }}
       >
         <input
@@ -28,6 +30,11 @@ export default function AddBookPage(props: {
         <input name="author" type="text" placeholder="Author"></input>
         <input name="year" type="number" placeholder="Year Published"></input>
         <input name="pages" type="number" placeholder="Pages"></input>
+        <input
+          name="edition"
+          type="text"
+          placeholder="Edition Name/Number"
+        ></input>
         <button type="submit">Add Book</button>
         <button onClick={() => props.toLibrary()}>Cancel</button>
       </form>

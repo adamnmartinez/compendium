@@ -13,14 +13,17 @@ export default function NoteList(props: {
     listElements.push(
       <li>
         <div>
-          <b>{note.title ? note.title : ''}</b> {note.title ? <br /> : ''}
+          <b>{note.title ? note.title : ""}</b> {note.title ? <br /> : ""}
           {note.content}
           <br />
-          <i>{note.quote ? note.quote : ''}</i> {note.quote ? <br /> : ''}
-          {note.chapter ? `Chapter ${note.chapter} ` : ''} {note.chapter ? <br /> : ''}
-          {note.page ? `Page ${note.page} ` : ''} {note.page ? <br /> : ''}
-          {note.speaker? `Spoken by ${note.speaker} ` : ''} {note.speaker ? <br /> : ''}
-          <button onClick={() => props.deleteNote(note)}>Delete</button> <button onClick={() => props.editNote(note, props.book)}>Edit</button>
+          <i>{note.quote ? note.quote : ""}</i> {note.quote ? <br /> : ""}
+          {note.chapter ? `Chapter ${note.chapter} ` : ""}{" "}
+          {note.chapter ? <br /> : ""}
+          {note.page ? `Page ${note.page} ` : ""} {note.page ? <br /> : ""}
+          {note.speaker ? `Spoken by ${note.speaker} ` : ""}{" "}
+          {note.speaker ? <br /> : ""}
+          <button onClick={() => props.deleteNote(note)}>Delete</button>{" "}
+          <button onClick={() => props.editNote(note, props.book)}>Edit</button>
         </div>
       </li>,
     );
