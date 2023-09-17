@@ -6,6 +6,7 @@ export default function LibraryPage(props: {
   lib: Book[];
   addBook: Function;
   editBook: Function;
+  bookNotes: Function;
 }) {
   return (
     <>
@@ -13,8 +14,9 @@ export default function LibraryPage(props: {
       <button onClick={() => props.addBook()}>Add Book</button>
       <BookList
         deleteFunc={props.pullFunc}
-        list={props.lib}
         editFunc={props.editBook}
+        notesFunc={props.bookNotes}
+        list={props.lib}
       />
     </>
   );

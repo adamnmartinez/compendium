@@ -2,8 +2,9 @@ import { Book } from "./App";
 
 export default function BookList(props: {
   deleteFunc: Function;
-  list: Book[];
   editFunc: Function;
+  notesFunc: Function;
+  list: Book[];
 }): React.ReactElement {
   const listElements: React.ReactElement[] = [];
 
@@ -11,11 +12,12 @@ export default function BookList(props: {
     listElements.push(
       <li>
         <div>
-          {book.title} ({book.publishedYear ? book.publishedYear : "Unknown"}),
+          <i>{book.title}</i>{book.publishedYear ? ` (${book.publishedYear})` : ''},
           by {book.author ? book.author : "Unknown"}.{" "}
-          {book.pages ? `${book.pages} pages` : ""}
-          <button onClick={() => props.deleteFunc(book)}>Delete Book</button>
-          <button onClick={() => props.editFunc(book)}>Edit Book</button>
+          {book.pages ? `${book.pages} pages. ` : ""}
+          <button onClick={() => props.editFunc(book)}>Edit</button>
+          <button onClick={() => props.notesFunc(book)}>Notes</button>
+          <button onClick={() => props.deleteFunc(book)}>Delete</button>
         </div>
       </li>,
     );

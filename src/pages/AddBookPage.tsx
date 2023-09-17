@@ -21,13 +21,13 @@ export default function AddBookPage(props: {
       >
         <input
           name="bookTitle"
-          type="bookTitle"
+          type="text"
           placeholder="Title"
           required
         ></input>
-        <input name="author" type="author" placeholder="Author"></input>
-        <input name="year" type="year" placeholder="Year Published"></input>
-        <input name="pages" type="pages" placeholder="Pages"></input>
+        <input name="author" type="text" placeholder="Author"></input>
+        <input name="year" type="number" placeholder="Year Published"></input>
+        <input name="pages" type="number" placeholder="Pages"></input>
         <button type="submit">Add Book</button>
         <button onClick={() => props.toLibrary()}>Cancel</button>
       </form>

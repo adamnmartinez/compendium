@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
+
 import LibraryPage from "../pages/LibraryPage";
 import AddBookPage from "../pages/AddBookPage";
-import BookDataPage from "../pages/BookDataPage";
+import EditBookPage from "../pages/EditBookPage";
+import BookNotesPage from "../pages/BookNotesPage"
+import EditNotePage from "../pages/EditNotePage";
 
 export class Book {
   title: string;
   author: string;
   publishedYear: number;
   pages: number;
+  notes: Note[]
   constructor(
     title: string,
     author: string,
@@ -18,6 +22,31 @@ export class Book {
     this.author = author;
     this.publishedYear = publishedYear;
     this.pages = pages;
+    this.notes = []
+  }
+} // Book Class Definition
+
+export class Note {
+  title: string;
+  content: string;
+  quote: string;
+  chapter: string;
+  page: number;
+  speaker: string;
+  constructor(
+    title: string,
+    content: string,
+    quote: string,
+    chapter: string,
+    page: number,
+    speaker: string,
+  ) {
+    this.title = title;
+    this.content = content;
+    this.quote = quote;
+    this.chapter = chapter;
+    this.page = page;
+    this.speaker = speaker;
   }
 } // Book Class Definition
 
@@ -46,6 +75,7 @@ function App() {
       lib={library}
       addBook={addBook}
       editBook={editBook}
+      bookNotes={bookNotes}
     />
   );
 
@@ -54,7 +84,15 @@ function App() {
   }
 
   function editBook(book: Book): void {
-    setPage(<BookDataPage book={book} toLibrary={goToLibrary} />);
+    setPage(<EditBookPage book={book} toLibrary={goToLibrary} />);
+  }
+
+  function editNote(note: Note, book: Book){
+    setPage(<EditNotePage note={note} book={book} toBookNotes={bookNotes}/>)
+  }
+
+  function bookNotes(book: Book): void {
+    setPage(<BookNotesPage book={book} toLibrary={goToLibrary} editNote={editNote} renderNotesPage={bookNotes}/>)
   }
 
   function goToLibrary(): void {

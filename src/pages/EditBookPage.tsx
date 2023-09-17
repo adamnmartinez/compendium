@@ -1,6 +1,6 @@
 import { Book } from "../components/App";
 
-export default function BookDataPage(props: {
+export default function EditBookPage(props: {
   book: Book;
   toLibrary: Function;
 }) {
@@ -19,23 +19,27 @@ export default function BookDataPage(props: {
       >
         <input
           name="bookTitle"
-          type="bookTitle"
+          type="text"
           defaultValue={props.book.title}
+          placeholder="Title"
           required
         ></input>
         <input
           name="author"
-          type="author"
+          type="text"
+          placeholder="Author"
           defaultValue={props.book.author}
         ></input>
         <input
           name="year"
-          type="year"
+          type="number"
+          placeholder="Year Published"
           defaultValue={props.book.publishedYear}
         ></input>
         <input
           name="pages"
-          type="pages"
+          type="number"
+          placeholder="Pages"
           defaultValue={props.book.pages}
         ></input>
         <button type="submit">Save</button>
