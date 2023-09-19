@@ -24,6 +24,7 @@
     "eslint-plugin-react-refresh": "^0.4.3",
     "eslint-prettier-config": "1.0.1",
     "prettier": "3.0.3",
+    "sass": "1.67.0",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
   }

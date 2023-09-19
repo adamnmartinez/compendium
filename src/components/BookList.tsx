@@ -11,19 +11,40 @@ export default function BookList(props: {
   props.list.forEach((book) => {
     listElements.push(
       <li>
-        <div>
-          <i>{book.title}</i>
-          {book.publishedYear ? ` (${book.publishedYear})` : ""}, by{" "}
-          {book.author ? book.author : "Unknown"}.{" "}
-          {book.pages ? `${book.pages} pages. ` : ""}{" "}
-          {book.edition ? `Edition ${book.edition}. ` : ""}
-          <button onClick={() => props.editFunc(book)}>Edit</button>
-          <button onClick={() => props.notesFunc(book)}>Notes</button>
-          <button onClick={() => props.deleteFunc(book)}>Delete</button>
+        <div className="bookWrapper">
+          <span className="bookName">
+            {book.title}
+            {book.publishedYear ? ` (${book.publishedYear})` : ""}{" "}
+          </span>
+          <hr />
+          by {book.author ? book.author : "Unknown"} <br />
+          {book.pages ? `${book.pages} pages ` : ""} {book.pages ? <br /> : ""}
+          {book.edition ? `Edition ${book.edition} ` : ""}{" "}
+          {book.edition ? <br /> : ""}
+          <div className="bookButtons">
+            <button
+              className="bookOperations"
+              onClick={() => props.editFunc(book)}
+            >
+              Edit
+            </button>
+            <button
+              className="bookOperations"
+              onClick={() => props.notesFunc(book)}
+            >
+              Notes
+            </button>
+            <button
+              className="bookOperations deleteBtn"
+              onClick={() => props.deleteFunc(book)}
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </li>,
     );
   });
 
-  return <ul>{listElements}</ul>;
+  return <ul className="bookList">{listElements}</ul>;
 }

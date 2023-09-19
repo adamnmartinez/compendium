@@ -127,7 +127,7 @@ function App() {
 
   save();
 
-  return <>{page}</>;
+  return <div className="pageWrapper">{page}</div>;
 }
 
 export default App;

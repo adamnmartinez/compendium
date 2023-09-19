@@ -5,8 +5,9 @@ export default function AddBookPage(props: {
   toLibrary: Function;
 }) {
   return (
-    <>
-      Add Book Page <br />
+    <div className="addBookPage">
+      <header>Compendium</header>
+      <br />
       <form
         onSubmit={(event) => {
           event.preventDefault();
@@ -21,23 +22,30 @@ export default function AddBookPage(props: {
           props.toLibrary();
         }}
       >
-        <input
-          name="bookTitle"
-          type="text"
-          placeholder="Title"
-          required
-        ></input>
-        <input name="author" type="text" placeholder="Author"></input>
-        <input name="year" type="number" placeholder="Year Published"></input>
-        <input name="pages" type="number" placeholder="Pages"></input>
-        <input
-          name="edition"
-          type="text"
-          placeholder="Edition Name/Number"
-        ></input>
-        <button type="submit">Add Book</button>
-        <button onClick={() => props.toLibrary()}>Cancel</button>
+        <p>Title</p>
+        <input name="bookTitle" type="text" required></input>
+        <br />
+        <p>Author(s)</p>
+        <input name="author" type="text"></input>
+        <br />
+        <p>Year Published</p>
+        <input name="year" type="number"></input>
+        <br />
+        <p>Pages</p>
+        <input name="pages" type="number"></input>
+        <br />
+        <p>Edition Number/Title</p>
+        <input name="edition" type="text"></input>
+        <br />
+        <div className="flexbuttons">
+          <button className="submitBtn" type="submit">
+            Submit Entry
+          </button>
+          <button className="cancelBtn" onClick={() => props.toLibrary()}>
+            Cancel
+          </button>
+        </div>
       </form>
-    </>
+    </div>
   );
 }

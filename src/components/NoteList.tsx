@@ -13,21 +13,42 @@ export default function NoteList(props: {
     listElements.push(
       <li>
         <div>
-          <b>{note.title ? note.title : ""}</b> {note.title ? <br /> : ""}
-          {note.content}
-          <br />
-          <i>{note.quote ? note.quote : ""}</i> {note.quote ? <br /> : ""}
-          {note.chapter ? `Chapter ${note.chapter} ` : ""}{" "}
-          {note.chapter ? <br /> : ""}
-          {note.page ? `Page ${note.page} ` : ""} {note.page ? <br /> : ""}
-          {note.speaker ? `Spoken by ${note.speaker} ` : ""}{" "}
-          {note.speaker ? <br /> : ""}
-          <button onClick={() => props.deleteNote(note)}>Delete</button>{" "}
-          <button onClick={() => props.editNote(note, props.book)}>Edit</button>
+          <div className="title">
+            <b>{note.title ? note.title : ""}</b>
+          </div>
+          <div className="content">{note.content}</div>
+          <div className="quote">
+            <i>
+              {note.quote ? '"' + note.quote + '"' : ""}{" "}
+              {note.speaker
+                ? ` - ${note.speaker} `
+                : `${note.quote ? ` - ${props.book.author}` : ""}`}{" "}
+            </i>
+          </div>
+          <div className="details">
+            {note.chapter ? `Chapter ${note.chapter} ` : ""}{" "}
+            {note.chapter ? <br /> : ""}
+            {note.page ? `Page ${note.page} ` : ""} {note.page ? <br /> : ""}
+            {note.speaker ? <br /> : ""}
+          </div>
+          <div className="notebuttons">
+            <button
+              className="editBtn"
+              onClick={() => props.editNote(note, props.book)}
+            >
+              Edit
+            </button>
+            <button
+              className="deleteBtn"
+              onClick={() => props.deleteNote(note)}
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </li>,
     );
   });
 
-  return <ul>{listElements}</ul>;
+  return <ul className="noteList">{listElements}</ul>;
 }

@@ -1,0 +1,413 @@
+@font-face {
+  font-family: Lora;
+  src: url(../assets/fonts/Lora-Regular.ttf);
+}
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgb(206, 206, 206);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(163, 163, 163);
+  border-radius: 200px;
+}
+
+:root {
+  font-family: Lora;
+  font-size: 16px;
+}
+
+header {
+  font-size: 3rem;
+}
+
+button {
+  transition: background-color 250ms;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.pageWrapper {
+  padding: 50px 200px 0px 200px;
+}
+
+.libraryPage ul {
+  list-style: none;
+  padding-left: 0;
+}
+.libraryPage ul.bookList li {
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border-width: 1px;
+  border-style: solid;
+  overflow: hidden;
+}
+.libraryPage ul.bookList li .bookName {
+  font-size: 1.3rem;
+}
+.libraryPage button {
+  font-family: Lora;
+  border-radius: 24px;
+  border-width: 1px;
+  font-size: inherit;
+  border-style: solid;
+  padding: 10px;
+  background-color: rgb(239, 239, 239);
+}
+.libraryPage button:hover {
+  background-color: white;
+}
+.libraryPage button.bookOperations {
+  margin-right: 10px;
+  width: 100px;
+}
+.libraryPage button.bookOperations.deleteBtn {
+  background-color: #fedada;
+}
+.libraryPage button.bookOperations.deleteBtn:hover {
+  background-color: rgb(250, 120, 120);
+}
+.libraryPage button.addBookBtn {
+  width: 100%;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-size: 1.2rem;
+}
+.libraryPage .bookButtons {
+  padding-top: 10px;
+}
+@media (max-width: 800px) {
+  .libraryPage button {
+    padding: 5px;
+  }
+  .libraryPage button.bookOperations {
+    width: 60px;
+  }
+}
+@media (max-width: 580px) {
+  .libraryPage button {
+    padding: 5px;
+  }
+  .libraryPage button.bookOperations {
+    width: 60px;
+  }
+}
+@media (max-width: 450px) {
+  .libraryPage button {
+    padding: 5px;
+  }
+  .libraryPage button.bookOperations {
+    width: 60px;
+    margin: 5px;
+  }
+}
+
+.addBookPage form p,
+.editBookPage form p {
+  margin: 0px;
+  margin-bottom: 5px;
+}
+.addBookPage form input,
+.editBookPage form input {
+  padding: 20px;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 5px;
+  border-width: 1px;
+  box-sizing: border-box;
+  margin-bottom: 5px;
+  font-family: Lora;
+  font-size: 1.1rem;
+}
+.addBookPage form input:target,
+.editBookPage form input:target {
+  color: red;
+}
+.addBookPage form .flexbuttons,
+.editBookPage form .flexbuttons {
+  width: 100%;
+  display: flex;
+}
+.addBookPage form .flexbuttons button,
+.editBookPage form .flexbuttons button {
+  font-family: Lora;
+  border-radius: 5px;
+  border-width: 1px;
+  font-size: inherit;
+  border-style: solid;
+  width: 100%;
+  padding: 10px;
+  flex: 1;
+  margin-top: 10px;
+}
+.addBookPage form .flexbuttons button.submitBtn,
+.editBookPage form .flexbuttons button.submitBtn {
+  background-color: #e9fce9;
+  margin-right: 10px;
+}
+.addBookPage form .flexbuttons button.submitBtn:hover,
+.editBookPage form .flexbuttons button.submitBtn:hover {
+  background-color: rgb(144, 239, 144);
+}
+.addBookPage form .flexbuttons button.cancelBtn:hover,
+.editBookPage form .flexbuttons button.cancelBtn:hover {
+  background-color: rgb(255, 255, 255);
+}
+@media (max-width: 450px) {
+  .addBookPage form input,
+  .editBookPage form input {
+    text-align: center;
+    padding: 10px;
+  }
+  .addBookPage form .flexbuttons button,
+  .editBookPage form .flexbuttons button {
+    padding: 5px;
+  }
+}
+
+.bookNotesPage input,
+.bookNotesPage textarea {
+  width: 100%;
+  font-size: inherit;
+  font-family: inherit;
+  box-sizing: border-box;
+  border-radius: 5px;
+  border-width: 1px;
+  padding: 5px;
+  margin-bottom: 10px;
+  resize: none;
+}
+.bookNotesPage textarea {
+  padding-bottom: 50px;
+}
+.bookNotesPage button.tolibrary,
+.bookNotesPage button.revealForm {
+  width: 100%;
+  border-radius: 5px;
+  padding: 10px;
+  border-width: 1px;
+}
+.bookNotesPage button.tolibrary:hover,
+.bookNotesPage button.revealForm:hover {
+  background-color: white;
+}
+.bookNotesPage button.revealForm {
+  margin-bottom: 10px;
+}
+.bookNotesPage button.revealForm:hover {
+  background-color: white;
+}
+.bookNotesPage .bookInfo {
+  font-size: 1.2rem;
+}
+.bookNotesPage .bookInfo span.bookTitle {
+  font-size: 1.5rem;
+}
+.bookNotesPage .pagechapterflex {
+  display: flex;
+  width: 100%;
+}
+.bookNotesPage .pagechapterflex input {
+  flex: 1;
+}
+.bookNotesPage .pagechapterflex input.chapterinput {
+  margin-right: 10px;
+}
+.bookNotesPage .ideaquoteflex {
+  display: flex;
+  width: 100%;
+  margin-bottom: 10px;
+}
+.bookNotesPage .ideaquoteflex textarea {
+  margin-bottom: 0px;
+  flex: 1;
+}
+.bookNotesPage .ideaquoteflex textarea.contentinput {
+  margin-right: 10px;
+}
+.bookNotesPage .flexbuttons {
+  display: flex;
+  width: 100%;
+  margin-bottom: 10px;
+}
+.bookNotesPage .flexbuttons button {
+  flex: 1;
+  padding: 5px;
+  border-radius: 5px;
+  border-width: 1px;
+}
+.bookNotesPage .flexbuttons button:hover {
+  background-color: white;
+}
+.bookNotesPage .flexbuttons button.confirmBtn {
+  background-color: #e9fce9;
+  margin-right: 10px;
+}
+.bookNotesPage .flexbuttons button.confirmBtn:hover {
+  background-color: rgb(144, 239, 144);
+}
+.bookNotesPage .flexbuttons button.closeBtn {
+  margin-right: 10px;
+}
+.bookNotesPage .flexbuttons button.resetBtn {
+  background-color: #fedada;
+}
+.bookNotesPage .flexbuttons button.resetBtn:hover {
+  background-color: rgb(250, 120, 120);
+}
+.bookNotesPage .noteList {
+  list-style: none;
+  padding-left: 0;
+}
+.bookNotesPage .noteList li {
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 1px;
+  padding: 15px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.bookNotesPage .noteList li .content {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.bookNotesPage .noteList li .quote {
+  opacity: 70%;
+  margin-bottom: 5px;
+}
+.bookNotesPage .noteList button {
+  padding: 5px;
+  border-radius: 5px;
+  border-width: 1px;
+}
+.bookNotesPage .noteList button.editBtn {
+  margin-right: 5px;
+}
+.bookNotesPage .noteList button.editBtn:hover {
+  background-color: white;
+}
+.bookNotesPage .noteList button.deleteBtn {
+  background-color: #fedada;
+}
+.bookNotesPage .noteList button.deleteBtn:hover {
+  background-color: rgb(250, 120, 120);
+}
+.bookNotesPage .notebuttons {
+  margin-top: 10px;
+}
+
+.noteEditPage form p {
+  margin: 0px;
+  margin-bottom: 5px;
+}
+.noteEditPage form input,
+.noteEditPage form textarea {
+  padding: 10px;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 5px;
+  border-width: 1px;
+  box-sizing: border-box;
+  margin-bottom: 5px;
+  font-family: Lora;
+  font-size: 1.1rem;
+  resize: none;
+}
+.noteEditPage form input:target,
+.noteEditPage form textarea:target {
+  color: red;
+}
+.noteEditPage form .flexbuttons {
+  width: 100%;
+  display: flex;
+}
+.noteEditPage form .flexbuttons button {
+  font-family: Lora;
+  border-radius: 5px;
+  border-width: 1px;
+  font-size: inherit;
+  border-style: solid;
+  width: 100%;
+  padding: 10px;
+  flex: 1;
+  margin-top: 10px;
+}
+.noteEditPage form .flexbuttons button.submitBtn {
+  background-color: #e9fce9;
+  margin-right: 10px;
+}
+.noteEditPage form .flexbuttons button.submitBtn:hover {
+  background-color: rgb(144, 239, 144);
+}
+.noteEditPage form .flexbuttons button.cancelBtn:hover {
+  background-color: rgb(255, 255, 255);
+}
+.noteEditPage .bookInfo {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+.noteEditPage .bookInfo span.bookTitle {
+  font-size: 1.5rem;
+}
+.noteEditPage .pagechapterflex {
+  display: flex;
+  width: 100%;
+}
+.noteEditPage .pagechapterflex input {
+  flex: 1;
+}
+.noteEditPage .pagechapterflex input.chapterinput {
+  margin-right: 10px;
+}
+.noteEditPage .ideaquoteflex {
+  display: flex;
+  width: 100%;
+  margin-bottom: 0px;
+}
+.noteEditPage .ideaquoteflex textarea {
+  padding-bottom: 100px;
+  margin-bottom: 5px;
+  flex: 1;
+}
+.noteEditPage .ideaquoteflex textarea.contentinput {
+  margin-right: 10px;
+}
+@media (max-width: 450px) {
+  .noteEditPage form input {
+    text-align: center;
+    padding: 5px;
+  }
+  .noteEditPage form .flexbuttons button {
+    padding: 5px;
+  }
+}
+
+@media (max-width: 800px) {
+  :root {
+    font-size: 12px;
+  }
+  .pageWrapper {
+    padding: 30px 150px 0px 150px;
+  }
+}
+@media (max-width: 580px) {
+  :root {
+    font-size: 10px;
+  }
+  .pageWrapper {
+    padding: 30px 100px 0px 100px;
+  }
+}
+@media (max-width: 450px) {
+  :root {
+    font-size: 8px;
+    text-align: center;
+  }
+  .pageWrapper {
+    padding: 30px 50px 0px 50px;
+  }
+} /*# sourceMappingURL=style.css.map */

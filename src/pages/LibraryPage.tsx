@@ -9,15 +9,17 @@ export default function LibraryPage(props: {
   bookNotes: Function;
 }) {
   return (
-    <>
-      Library Page <br />
-      <button onClick={() => props.addBook()}>Add Book</button>
+    <div className="libraryPage">
+      <header>Compendium</header> <br />
+      <button className="addBookBtn" onClick={() => props.addBook()}>
+        New Entry +
+      </button>
       <BookList
         deleteFunc={props.pullFunc}
         editFunc={props.editBook}
         notesFunc={props.bookNotes}
         list={props.lib}
       />
-    </>
+    </div>
   );
 }
