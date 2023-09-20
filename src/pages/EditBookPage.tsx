@@ -19,7 +19,7 @@ export default function EditBookPage(props: {
           props.toLibrary();
         }}
       >
-        <p>Title</p>
+        <p>Title *</p>
         <input
           name="bookTitle"
           type="text"

@@ -134,54 +134,91 @@ button {
 
 .addBookPage,
 .editBookPage {
-  form {
-    p {
-      margin: 0px;
-      margin-bottom: 5px;
-    }
-    input {
-      padding: 20px;
-      width: 100%;
-      max-width: 100%;
-      border-radius: 5px;
-      border-width: 1px;
-      box-sizing: border-box;
-      margin-bottom: 5px;
-      font-family: Lora;
-      font-size: 1.1rem;
+  p {
+    margin: 0px;
+    margin-bottom: 5px;
+  }
+  input {
+    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 5px;
+    border-width: 1px;
+    box-sizing: border-box;
+    margin-bottom: 5px;
+    font-family: Lora;
+    font-size: 1.1rem;
 
-      &:target {
-        color: red;
-      }
+    &:target {
+      color: red;
     }
-    .flexbuttons {
-      width: 100%;
-      display: flex;
+  }
+  ul {
+    list-style: none;
+    padding-left: 0;
+    li {
+      border-width: 1px;
+      border-radius: 5px;
+      border-style: solid;
+      padding: 15px;
+      margin-bottom: 10px;
+      p {
+        font-size: 1.2rem;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
       button {
-        font-family: Lora;
+        margin-top: 5px;
+        transition: background-color 250ms;
         border-radius: 5px;
         border-width: 1px;
-        font-size: inherit;
         border-style: solid;
-        width: 100%;
         padding: 10px;
-        flex: 1;
-        margin-top: 10px;
-
-        &.submitBtn {
-          background-color: lighten($affirmative_color, 20%);
-          margin-right: 10px;
-          &:hover {
-            background-color: $affirmative_color;
-          }
-        }
-
-        &.cancelBtn {
-          &:hover {
-            background-color: rgb(255, 255, 255);
-          }
+        background-color: lighten($affirmative_color, 20%);
+        &:hover {
+          background-color: $affirmative_color;
         }
       }
+    }
+  }
+  .flexbuttons {
+    width: 100%;
+    display: flex;
+    button {
+      font-family: Lora;
+      border-radius: 5px;
+      border-width: 1px;
+      font-size: inherit;
+      border-style: solid;
+      width: 100%;
+      padding: 10px;
+      flex: 1;
+      margin-top: 10px;
+
+      &.submitBtn {
+        background-color: lighten($affirmative_color, 20%);
+        margin-right: 10px;
+        &:hover {
+          background-color: $affirmative_color;
+        }
+      }
+
+      &.cancelBtn {
+        &:hover {
+          background-color: rgb(255, 255, 255);
+        }
+      }
+    }
+  }
+
+  .yearpageflex {
+    display: flex;
+    .year {
+      margin-right: 10px;
+    }
+    .year,
+    .page {
+      flex: 1;
     }
   }
 

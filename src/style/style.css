@@ -106,13 +106,13 @@ button {
   }
 }
 
-.addBookPage form p,
-.editBookPage form p {
+.addBookPage p,
+.editBookPage p {
   margin: 0px;
   margin-bottom: 5px;
 }
-.addBookPage form input,
-.editBookPage form input {
+.addBookPage input,
+.editBookPage input {
   padding: 20px;
   width: 100%;
   max-width: 100%;
@@ -123,17 +123,50 @@ button {
   font-family: Lora;
   font-size: 1.1rem;
 }
-.addBookPage form input:target,
-.editBookPage form input:target {
+.addBookPage input:target,
+.editBookPage input:target {
   color: red;
 }
-.addBookPage form .flexbuttons,
-.editBookPage form .flexbuttons {
+.addBookPage ul,
+.editBookPage ul {
+  list-style: none;
+  padding-left: 0;
+}
+.addBookPage ul li,
+.editBookPage ul li {
+  border-width: 1px;
+  border-radius: 5px;
+  border-style: solid;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+.addBookPage ul li p,
+.editBookPage ul li p {
+  font-size: 1.2rem;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.addBookPage ul li button,
+.editBookPage ul li button {
+  margin-top: 5px;
+  transition: background-color 250ms;
+  border-radius: 5px;
+  border-width: 1px;
+  border-style: solid;
+  padding: 10px;
+  background-color: #e9fce9;
+}
+.addBookPage ul li button:hover,
+.editBookPage ul li button:hover {
+  background-color: rgb(144, 239, 144);
+}
+.addBookPage .flexbuttons,
+.editBookPage .flexbuttons {
   width: 100%;
   display: flex;
 }
-.addBookPage form .flexbuttons button,
-.editBookPage form .flexbuttons button {
+.addBookPage .flexbuttons button,
+.editBookPage .flexbuttons button {
   font-family: Lora;
   border-radius: 5px;
   border-width: 1px;
@@ -144,18 +177,32 @@ button {
   flex: 1;
   margin-top: 10px;
 }
-.addBookPage form .flexbuttons button.submitBtn,
-.editBookPage form .flexbuttons button.submitBtn {
+.addBookPage .flexbuttons button.submitBtn,
+.editBookPage .flexbuttons button.submitBtn {
   background-color: #e9fce9;
   margin-right: 10px;
 }
-.addBookPage form .flexbuttons button.submitBtn:hover,
-.editBookPage form .flexbuttons button.submitBtn:hover {
+.addBookPage .flexbuttons button.submitBtn:hover,
+.editBookPage .flexbuttons button.submitBtn:hover {
   background-color: rgb(144, 239, 144);
 }
-.addBookPage form .flexbuttons button.cancelBtn:hover,
-.editBookPage form .flexbuttons button.cancelBtn:hover {
+.addBookPage .flexbuttons button.cancelBtn:hover,
+.editBookPage .flexbuttons button.cancelBtn:hover {
   background-color: rgb(255, 255, 255);
+}
+.addBookPage .yearpageflex,
+.editBookPage .yearpageflex {
+  display: flex;
+}
+.addBookPage .yearpageflex .year,
+.editBookPage .yearpageflex .year {
+  margin-right: 10px;
+}
+.addBookPage .yearpageflex .year,
+.addBookPage .yearpageflex .page,
+.editBookPage .yearpageflex .year,
+.editBookPage .yearpageflex .page {
+  flex: 1;
 }
 @media (max-width: 450px) {
   .addBookPage form input,
