@@ -43,6 +43,28 @@ button {
 
 // Page Styles
 .libraryPage {
+  input {
+    padding: 5px;
+    box-sizing: border-box;
+    border-radius: 24px;
+    border-width: 1px;
+    margin-top: 10px;
+    width: 100%;
+    font-family: inherit;
+    font-size: inherit;
+    text-align: center;
+  }
+
+  a {
+    text-decoration: none;
+    color: black;
+    transition: color 250ms;
+
+    &:hover {
+      color: $delete_color;
+    }
+  }
+
   ul {
     list-style: none;
     padding-left: 0;
@@ -54,6 +76,11 @@ button {
         border-width: 1px;
         border-style: solid;
         overflow: hidden;
+
+        &.noresults {
+          text-align: center;
+          padding: 75px 20px 75px 20px;
+        }
 
         .bookName {
           font-size: 1.3rem;
