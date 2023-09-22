@@ -58,7 +58,11 @@ export default function BookList(props: {
 
   return (
     <ul className="bookList">
-      {listElements.length !== 0 ? listElements : noResults}
+      {listElements.length !== 0
+        ? listElements
+        : props.query === ""
+        ? ""
+        : noResults}
     </ul>
   );
 }

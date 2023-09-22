@@ -1,6 +1,6 @@
 import { Book } from "../components/App";
 import { Note } from "../components/App";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import NoteList from "../components/NoteList";
 
 export default function BookNotesPage(props: {
@@ -10,6 +10,7 @@ export default function BookNotesPage(props: {
   renderNotesPage: Function;
 }) {
   const [formVis, setFormVis] = useState<Boolean>(false);
+  const [noteQuery, setNoteQuery] = useState<string>("");
 
   function formToggle(): void {
     formVis ? setFormVis(false) : setFormVis(true);
@@ -21,6 +22,11 @@ export default function BookNotesPage(props: {
     newArr.splice(index, 1);
     props.book.notes = newArr;
     props.renderNotesPage(props.book);
+  }
+
+  function handleSearch(event: ChangeEvent): void {
+    const target = event.currentTarget as HTMLInputElement;
+    setNoteQuery(target.value);
   }
 
   return (
@@ -102,11 +108,13 @@ export default function BookNotesPage(props: {
         Back to My Compendium
       </button>
       <hr />
+      <input placeholder={"Search for notes"} onChange={handleSearch}></input>
       <NoteList
         book={props.book}
         list={props.book.notes}
         deleteNote={deleteNote}
         editNote={props.editNote}
+        query={noteQuery}
       />
     </div>
   );
