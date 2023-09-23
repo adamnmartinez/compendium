@@ -38,7 +38,7 @@ button {
 }
 
 .pageWrapper {
-  padding: 50px 200px 0px 200px;
+  padding: 50px 130px 0px 130px;
 }
 
 // Page Styles
@@ -161,6 +161,11 @@ button {
 
 .addBookPage,
 .editBookPage {
+  button {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px
+  }
   p {
     margin: 0px;
     margin-bottom: 5px;
@@ -208,36 +213,31 @@ button {
       }
     }
   }
-  .flexbuttons {
+  button {
+    font-family: Lora;
+    border-radius: 5px;
+    border-width: 1px;
+    font-size: inherit;
+    border-style: solid;
     width: 100%;
-    display: flex;
-    button {
-      font-family: Lora;
-      border-radius: 5px;
-      border-width: 1px;
-      font-size: inherit;
-      border-style: solid;
-      width: 100%;
-      padding: 10px;
-      flex: 1;
-      margin-top: 10px;
+    padding: 10px;
+    flex: 1;
+    margin-top: 10px;
 
-      &.submitBtn {
-        background-color: lighten($affirmative_color, 20%);
-        margin-right: 10px;
-        &:hover {
-          background-color: $affirmative_color;
-        }
+    &.submitBtn {
+      background-color: lighten($affirmative_color, 20%);
+      margin-right: 10px;
+      &:hover {
+        background-color: $affirmative_color;
       }
+    }
 
-      &.cancelBtn {
-        &:hover {
-          background-color: rgb(255, 255, 255);
-        }
+    &.cancelBtn {
+      &:hover {
+        background-color: rgb(255, 255, 255);
       }
     }
   }
-
   .yearpageflex {
     display: flex;
     .year {
@@ -519,7 +519,7 @@ button {
   }
 
   .pageWrapper {
-    padding: 30px 150px 0px 150px;
+    padding: 30px 100px 0px 100px;
   }
 }
 
@@ -529,7 +529,7 @@ button {
   }
 
   .pageWrapper {
-    padding: 30px 100px 0px 100px;
+    padding: 30px 50px 0px 50px;
   }
 }
 
@@ -539,6 +539,6 @@ button {
     text-align: center;
   }
   .pageWrapper {
-    padding: 30px 50px 0px 50px;
+    padding: 30px 30px 0px 30px;
   }
 }

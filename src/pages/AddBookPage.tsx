@@ -7,6 +7,20 @@ export default function AddBookPage(props: {
 }) {
   const [searchResults, setSearchResults] = useState<React.ReactElement[]>([]);
 
+  const [manualEntryVis, setManualEntryVis] = useState<boolean>(false)
+
+  function toggleManualEntry(): void {
+    manualEntryVis ? setManualEntryVis(false) : setManualEntryVis(true)
+    setSearchVis(false)
+  }
+
+  const [searchVis, setSearchVis] = useState<boolean>(false)
+
+  function toggleSearch(): void {
+    searchVis ? setSearchVis(false) : setSearchVis(true)
+    setManualEntryVis(false)
+  }
+
   async function searchAPI(event: ChangeEvent) {
     const target = event.target as HTMLInputElement;
     if (target === null) {
@@ -65,6 +79,18 @@ export default function AddBookPage(props: {
       <br />
       Add an entry manually or by searching.
       <hr />
+      <button className="cancelBtn" onClick={() => props.toLibrary()}> Back to My Compendium </button>
+      <p> Search </p>
+      <div className="booksearchwrapper">
+        <input
+          className="searchinput"
+          type="text"
+          onChange={(e) => searchAPI(e)}
+          placeholder="Title, Author, Keyword"
+        ></input>
+        <ul className="booksearchlist">{searchResults}</ul>
+      </div>
+      <hr />
       <form
         onSubmit={(event) => {
           event.preventDefault();
@@ -103,22 +129,9 @@ export default function AddBookPage(props: {
           <button className="submitBtn" type="submit">
             Submit Entry
           </button>
-          <button className="cancelBtn" onClick={() => props.toLibrary()}>
-            Cancel
-          </button>
         </div>
-      </form>
-      <hr />
-      <div className="booksearchwrapper">
-        <p>Search</p>
-        <input
-          className="searchinput"
-          type="text"
-          onChange={(e) => searchAPI(e)}
-          placeholder="Title, Author, Keyword"
-        ></input>
-        <ul className="booksearchlist">{searchResults}</ul>
-      </div>
+      </form> 
+      
     </div>
   );
 }

@@ -39,6 +39,7 @@ export default function LibraryPage(props: {
         list={props.lib}
         query={libQuery}
       />
+      
     </div>
   );
 }

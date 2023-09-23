@@ -31,7 +31,7 @@ button {
 }
 
 .pageWrapper {
-  padding: 50px 200px 0px 200px;
+  padding: 50px 130px 0px 130px;
 }
 
 .libraryPage input {
@@ -129,6 +129,12 @@ button {
   }
 }
 
+.addBookPage button,
+.editBookPage button {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+}
 .addBookPage p,
 .editBookPage p {
   margin: 0px;
@@ -183,13 +189,8 @@ button {
 .editBookPage ul li button:hover {
   background-color: rgb(144, 239, 144);
 }
-.addBookPage .flexbuttons,
-.editBookPage .flexbuttons {
-  width: 100%;
-  display: flex;
-}
-.addBookPage .flexbuttons button,
-.editBookPage .flexbuttons button {
+.addBookPage button,
+.editBookPage button {
   font-family: Lora;
   border-radius: 5px;
   border-width: 1px;
@@ -200,17 +201,17 @@ button {
   flex: 1;
   margin-top: 10px;
 }
-.addBookPage .flexbuttons button.submitBtn,
-.editBookPage .flexbuttons button.submitBtn {
+.addBookPage button.submitBtn,
+.editBookPage button.submitBtn {
   background-color: #e9fce9;
   margin-right: 10px;
 }
-.addBookPage .flexbuttons button.submitBtn:hover,
-.editBookPage .flexbuttons button.submitBtn:hover {
+.addBookPage button.submitBtn:hover,
+.editBookPage button.submitBtn:hover {
   background-color: rgb(144, 239, 144);
 }
-.addBookPage .flexbuttons button.cancelBtn:hover,
-.editBookPage .flexbuttons button.cancelBtn:hover {
+.addBookPage button.cancelBtn:hover,
+.editBookPage button.cancelBtn:hover {
   background-color: rgb(255, 255, 255);
 }
 .addBookPage .yearpageflex,
@@ -461,7 +462,7 @@ button {
     font-size: 12px;
   }
   .pageWrapper {
-    padding: 30px 150px 0px 150px;
+    padding: 30px 100px 0px 100px;
   }
 }
 @media (max-width: 580px) {
@@ -469,7 +470,7 @@ button {
     font-size: 10px;
   }
   .pageWrapper {
-    padding: 30px 100px 0px 100px;
+    padding: 30px 50px 0px 50px;
   }
 }
 @media (max-width: 450px) {
@@ -478,6 +479,6 @@ button {
     text-align: center;
   }
   .pageWrapper {
-    padding: 30px 50px 0px 50px;
+    padding: 30px 30px 0px 30px;
   }
-} /*# sourceMappingURL=style.css.map */
+}/*# sourceMappingURL=style.css.map */
