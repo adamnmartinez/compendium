@@ -7,20 +7,6 @@ export default function AddBookPage(props: {
 }) {
   const [searchResults, setSearchResults] = useState<React.ReactElement[]>([]);
 
-  const [manualEntryVis, setManualEntryVis] = useState<boolean>(false)
-
-  function toggleManualEntry(): void {
-    manualEntryVis ? setManualEntryVis(false) : setManualEntryVis(true)
-    setSearchVis(false)
-  }
-
-  const [searchVis, setSearchVis] = useState<boolean>(false)
-
-  function toggleSearch(): void {
-    searchVis ? setSearchVis(false) : setSearchVis(true)
-    setManualEntryVis(false)
-  }
-
   async function searchAPI(event: ChangeEvent) {
     const target = event.target as HTMLInputElement;
     if (target === null) {
