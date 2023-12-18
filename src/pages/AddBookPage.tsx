@@ -1,11 +1,25 @@
 import { ChangeEvent, useState } from "react";
 import { Book } from "../components/App";
+import { v4 as uuid } from "uuid";
 
 export default function AddBookPage(props: {
   pushFunc: Function;
   toLibrary: Function;
 }) {
   const [searchResults, setSearchResults] = useState<React.ReactElement[]>([]);
+
+  async function awaitPush(newBook: Book) {
+    console.log(`AddBookPage: adding \"${newBook.title}\"...`);
+    try {
+      await props.pushFunc(newBook);
+    } catch {
+      `AddBookPage: an error occured in awaitPush while pushing \"${newBook.title}\"`;
+    } finally {
+      console.log(
+        `AddBookPage: finished pushing \"${newBook.title}\" (${newBook.uuid})`,
+      );
+    }
+  }
 
   async function searchAPI(event: ChangeEvent) {
     const target = event.target as HTMLInputElement;
@@ -46,8 +60,9 @@ export default function AddBookPage(props: {
                 itemYear,
                 pages ? pages : null,
                 "",
+                uuid(),
               );
-              props.pushFunc(newBook);
+              awaitPush(newBook);
               props.toLibrary();
             }}
           >
@@ -65,7 +80,10 @@ export default function AddBookPage(props: {
       <br />
       Add an entry manually or by searching.
       <hr />
-      <button className="cancelBtn" onClick={() => props.toLibrary()}> Back to My Compendium </button>
+      <button className="cancelBtn" onClick={() => props.toLibrary()}>
+        {" "}
+        Back to My Compendium{" "}
+      </button>
       <p> Search </p>
       <div className="booksearchwrapper">
         <input
@@ -86,8 +104,9 @@ export default function AddBookPage(props: {
             event.currentTarget.year.value,
             event.currentTarget.pages.value,
             event.currentTarget.edition.value,
+            uuid(),
           );
-          props.pushFunc(newBook);
+          awaitPush(newBook);
           props.toLibrary();
         }}
       >
@@ -116,8 +135,7 @@ export default function AddBookPage(props: {
             Submit Entry
           </button>
         </div>
-      </form> 
-      
+      </form>
     </div>
   );
 }

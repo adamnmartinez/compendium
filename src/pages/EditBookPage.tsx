@@ -3,7 +3,20 @@ import { Book } from "../components/App";
 export default function EditBookPage(props: {
   book: Book;
   toLibrary: Function;
+  editFunc: Function;
 }) {
+  async function awaitEdit(oldBook: Book, newBook: Book) {
+    console.log(`EditBookPage: modifying book \"${oldBook.title}\"`);
+    try {
+      await props.editFunc(oldBook, newBook);
+    } catch {
+      `EditBookPage: An error occured in awaitPush while modifying ${oldBook.title}`;
+    }
+    console.log(
+      `EditBookPage: successfully modified \"${oldBook.title}\" to \"${newBook.title}\"`,
+    );
+  }
+
   return (
     <div className="editBookPage">
       <header>Compendium</header>
@@ -11,11 +24,16 @@ export default function EditBookPage(props: {
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          props.book.title = event.currentTarget.bookTitle.value;
-          props.book.author = event.currentTarget.author.value;
-          props.book.publishedYear = event.currentTarget.year.value;
-          props.book.pages = event.currentTarget.pages.value;
-          props.book.edition = event.currentTarget.edition.value;
+          const updatedEntry = new Book(
+            event.currentTarget.bookTitle.value,
+            event.currentTarget.author.value,
+            event.currentTarget.year.value,
+            event.currentTarget.pages.value,
+            event.currentTarget.edition.value,
+            props.book.uuid,
+          );
+          updatedEntry.notes = props.book.notes;
+          awaitEdit(props.book, updatedEntry);
           props.toLibrary();
         }}
       >

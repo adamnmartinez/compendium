@@ -4,6 +4,7 @@ import { Note } from "./App";
 export default function NoteList(props: {
   deleteNote: Function;
   editNote: Function;
+  renderNoteList: Function;
   book: Book;
   list: Note[];
   query: string;
@@ -46,7 +47,10 @@ export default function NoteList(props: {
               </button>
               <button
                 className="deleteBtn"
-                onClick={() => props.deleteNote(note)}
+                onClick={() => {
+                  props.deleteNote(props.book, note);
+                  setTimeout(() => props.renderNoteList(), 500);
+                }}
               >
                 Delete
               </button>

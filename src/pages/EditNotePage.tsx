@@ -5,7 +5,20 @@ export default function EditNotePage(props: {
   note: Note;
   book: Book;
   toBookNotes: Function;
+  editFunc: Function;
 }) {
+  async function awaitNoteEdit(newnote: Note) {
+    console.log("EditNotePage: loading...");
+    try {
+      await props.editFunc(props.book, props.note, newnote);
+    } catch {
+      `EditNotePage: An error occured in awaitNoteEdit while modifying note from \"${props.book.title}\"`;
+    }
+    console.log(
+      `EditNotePage: successfully modified note from \"${props.book.title}\"`,
+    );
+  }
+
   return (
     <div className="noteEditPage">
       <div className="bookInfo">
@@ -23,13 +36,18 @@ export default function EditNotePage(props: {
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          props.note.title = event.currentTarget.noteTitle.value;
-          props.note.content = event.currentTarget.content.value;
-          props.note.quote = event.currentTarget.quote.value;
-          props.note.chapter = event.currentTarget.chapter.value;
-          props.note.page = event.currentTarget.page.value;
-          props.note.speaker = event.currentTarget.speaker.value;
-          props.toBookNotes(props.book);
+          const updatedNote = new Note(
+            event.currentTarget.noteTitle.value,
+            event.currentTarget.content.value,
+            event.currentTarget.quote.value,
+            event.currentTarget.chapter.value,
+            event.currentTarget.page.value,
+            event.currentTarget.speaker.value,
+            props.note.uuid,
+          );
+          awaitNoteEdit(updatedNote);
+          //props.toBookNotes(props.book);
+          //setTimeout(() => props.toBookNotes(props.book), 500);
         }}
       >
         <input

@@ -115,11 +115,16 @@ button {
       }
     }
 
-    &.addBookBtn {
+    &.addBookBtn,
+    &.reloadBtn {
       width: 100%;
       padding-top: 3px;
       padding-bottom: 3px;
       font-size: 1.2rem;
+    }
+
+    &.reloadBtn {
+      margin-top: 10px;
     }
   }
 
@@ -164,7 +169,7 @@ button {
   button {
     width: 100%;
     margin-bottom: 10px;
-    padding: 8px
+    padding: 8px;
   }
   p {
     margin: 0px;
@@ -507,6 +512,37 @@ button {
         button {
           padding: 5px;
         }
+      }
+    }
+  }
+}
+
+.authPage {
+  input {
+    width: 100%;
+    font-size: inherit;
+    font-family: inherit;
+    padding: 10px;
+    border-radius: 5px;
+    border-width: 1px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    box-sizing: border-box;
+  }
+  button {
+    width: 100%;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border-width: 1px;
+    padding: 10px;
+    transition: background-color 300ms;
+    &:hover {
+      background-color: white;
+    }
+    &.submitBtn {
+      &:hover {
+        background-color: $affirmative_color;
       }
     }
   }

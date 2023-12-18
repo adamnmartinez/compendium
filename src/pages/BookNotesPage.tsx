@@ -1,33 +1,88 @@
 import { Book } from "../components/App";
 import { Note } from "../components/App";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
+import { fetchUsers } from "../components/App";
+import { v4 as uuid } from "uuid";
 import NoteList from "../components/NoteList";
 
 export default function BookNotesPage(props: {
   book: Book;
+  user: string;
   toLibrary: Function;
   editNote: Function;
+  deleteNote: Function;
   renderNotesPage: Function;
+  newNote: Function;
 }) {
   const [formVis, setFormVis] = useState<Boolean>(false);
   const [noteQuery, setNoteQuery] = useState<string>("");
+  const [usernotes, setUsernotes] = useState<Note[]>([]);
+
+  let userlib: any[] = [];
+  let notesfromuser: Note[] = [];
 
   function formToggle(): void {
     formVis ? setFormVis(false) : setFormVis(true);
   }
 
-  function deleteNote(note: Note): void {
-    const newArr = [...props.book.notes];
-    const index = newArr.indexOf(note);
-    newArr.splice(index, 1);
-    props.book.notes = newArr;
-    props.renderNotesPage(props.book);
+  function renderNoteList() {
+    console.log(`BookNotes: rendering notelist for \"${props.book.title}\"...`);
+    fetchUsers().then((data) => {
+      try {
+        data.forEach((thisuser: any) => {
+          if (thisuser.username === props.user) {
+            userlib = thisuser.userlib.library;
+          }
+        });
+        if (userlib.length !== 0) {
+          userlib.forEach((entry) => {
+            if (entry.title === props.book.title) {
+              entry.notes.forEach((note: Note) => {
+                const notefromuser = new Note(
+                  note.title,
+                  note.content,
+                  note.quote,
+                  note.chapter,
+                  note.page,
+                  note.speaker,
+                  note.uuid,
+                );
+                notesfromuser.push(notefromuser);
+              });
+            }
+          });
+        }
+      } catch (error) {
+        console.log("BookNotes: an error occured while getting user data");
+        throw error;
+      } finally {
+        setUsernotes(notesfromuser);
+        console.log("BookNotes: finished rendering notelist");
+      }
+    });
+  }
+
+  async function awaitPull(book: Book, note: Book) {
+    console.log(`BookNotes: pulling note \"${note.title}\"...`);
+    try {
+      await props.deleteNote(book, note);
+    } catch {
+      `BookNotes: an error occured in awaitPull while deleting \"${note.title}\"`;
+    } finally {
+      console.log(
+        `BookNotes: finished pulling note \"${note.title}\" (${note.uuid}), from \"${book.title}\"`,
+      );
+    }
   }
 
   function handleSearch(event: ChangeEvent): void {
     const target = event.currentTarget as HTMLInputElement;
     setNoteQuery(target.value);
   }
+
+  useEffect(() => {
+    renderNoteList();
+  }, []);
 
   return (
     <div className="bookNotesPage">
@@ -58,17 +113,13 @@ export default function BookNotesPage(props: {
             event.currentTarget.chapter.value,
             event.currentTarget.page.value,
             event.currentTarget.speaker.value,
+            uuid(),
           );
-          props.book.notes.push(newNote);
-          console.log(props.book.notes);
-          props.renderNotesPage(props.book);
-          event.currentTarget.noteTitle.value = "";
-          event.currentTarget.content.value = "";
-          event.currentTarget.quote.value = "";
-          event.currentTarget.chapter.value = "";
-          event.currentTarget.page.value = "";
-          event.currentTarget.speaker.value = "";
+          props.newNote(props.book, newNote);
           formToggle();
+          setTimeout(() => {
+            renderNoteList();
+          }, 500);
         }}
       >
         <input name="noteTitle" placeholder="Note Title"></input>
@@ -110,11 +161,12 @@ export default function BookNotesPage(props: {
       <hr />
       <input placeholder={"Search for notes"} onChange={handleSearch}></input>
       <NoteList
-        book={props.book}
-        list={props.book.notes}
-        deleteNote={deleteNote}
+        deleteNote={awaitPull}
         editNote={props.editNote}
+        renderNoteList={renderNoteList}
         query={noteQuery}
+        book={props.book}
+        list={usernotes}
       />
     </div>
   );

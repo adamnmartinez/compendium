@@ -94,11 +94,15 @@ button {
 .libraryPage button.bookOperations.deleteBtn:hover {
   background-color: rgb(250, 120, 120);
 }
-.libraryPage button.addBookBtn {
+.libraryPage button.addBookBtn,
+.libraryPage button.reloadBtn {
   width: 100%;
   padding-top: 3px;
   padding-bottom: 3px;
   font-size: 1.2rem;
+}
+.libraryPage button.reloadBtn {
+  margin-top: 10px;
 }
 .libraryPage .bookButtons {
   padding-top: 10px;
@@ -457,6 +461,33 @@ button {
   }
 }
 
+.authPage input {
+  width: 100%;
+  font-size: inherit;
+  font-family: inherit;
+  padding: 10px;
+  border-radius: 5px;
+  border-width: 1px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  box-sizing: border-box;
+}
+.authPage button {
+  width: 100%;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border-width: 1px;
+  padding: 10px;
+  transition: background-color 300ms;
+}
+.authPage button:hover {
+  background-color: white;
+}
+.authPage button.submitBtn:hover {
+  background-color: rgb(144, 239, 144);
+}
+
 @media (max-width: 800px) {
   :root {
     font-size: 12px;
@@ -481,4 +512,4 @@ button {
   .pageWrapper {
     padding: 30px 30px 0px 30px;
   }
-}/*# sourceMappingURL=style.css.map */
+} /*# sourceMappingURL=style.css.map */
