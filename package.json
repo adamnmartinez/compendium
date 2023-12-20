@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.10.5",
@@ -29,7 +30,6 @@
     "sass": "1.67.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.0.2",
-    "uuid": "^9.0.1",
     "vite": "^4.4.5"
   }
 }
