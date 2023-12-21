@@ -55,6 +55,7 @@ export default function EditNotePage(props: {
           type="text"
           defaultValue={props.note.title}
           placeholder="Note Title"
+          required
         ></input>
         <br />
         <div className="ideaquoteflex">
@@ -63,7 +64,6 @@ export default function EditNotePage(props: {
             className="contentinput"
             placeholder="Note Content"
             defaultValue={props.note.content}
-            required
           ></textarea>
           <br />
           <textarea
