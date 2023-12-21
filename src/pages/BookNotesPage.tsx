@@ -122,14 +122,13 @@ export default function BookNotesPage(props: {
           }, 500);
         }}
       >
-        <input name="noteTitle" placeholder="Note Title"></input>
+        <input name="noteTitle" placeholder="Note Title" required></input>
         <br />
         <div className="ideaquoteflex">
           <textarea
             name="content"
             className="contentinput"
             placeholder="Your ideas here. *"
-            required
           ></textarea>
           <textarea name="quote" placeholder="Relevant text here."></textarea>
         </div>
