@@ -136,7 +136,7 @@ export default function BookNotesPage(props: {
           <input
             className="chapterinput"
             name="chapter"
-            placeholder="Chapter Title/Number"
+            placeholder="Chapter/Part/Section"
           ></input>
           <input name="page" type="number" placeholder="Page Number"></input>
         </div>

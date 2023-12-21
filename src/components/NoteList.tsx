@@ -33,7 +33,7 @@ export default function NoteList(props: {
               </i>
             </div>
             <div className="details">
-              {note.chapter ? `Chapter: ${note.chapter} ` : ""}{" "}
+              {note.chapter ? `${note.chapter} ` : ""}{" "}
               {note.chapter ? <br /> : ""}
               {note.page ? `Page ${note.page} ` : ""} {note.page ? <br /> : ""}
               {note.speaker ? <br /> : ""}

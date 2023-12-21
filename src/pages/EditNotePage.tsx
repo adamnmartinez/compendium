@@ -77,7 +77,7 @@ export default function EditNotePage(props: {
             name="chapter"
             type="text"
             className="chapterinput"
-            placeholder="Chapter Title/Number"
+            placeholder="Chapter/Part/Section"
             defaultValue={props.note.chapter}
           ></input>
           <input
