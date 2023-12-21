@@ -17,13 +17,19 @@ export default function AuthPage(props: {
 
   async function verify(username: string, password: string) {
     console.log("AuthPage: attempting to verify user...");
-    const data = await fetchUsers();
-    let verified = false;
-    data.forEach((user: any) => {
-      if (username === user.username && password === user.password) {
-        verified = true;
-      }
-    });
+    let verified = false
+    try {
+      const data = await fetchUsers();
+      data.forEach((user: any) => {
+        if (username === user.username && password === user.password) {
+          verified = true;
+        }
+      });
+      if (verified == false) setMessage("Incorrect Username or Password");
+    } catch (e) {
+      setMessage("An error occured while verifying your credentials with the database. This may be related to our server which sometimes needs a few minutes to spin up after a period of inactivity. Please try again in a few moments.");
+    }
+    
     return verified;
   }
 
@@ -60,9 +66,7 @@ export default function AuthPage(props: {
           verified = result;
           if (!result)
             console.log("AuthPage: could not verify those credentials!");
-          verified
-            ? authenticate(username)
-            : setMessage("Incorrect Username or Password");
+          if (verified) authenticate(username)
         });
         event.currentTarget.password.value = "";
       }}
@@ -104,18 +108,29 @@ export default function AuthPage(props: {
         const password: string = event.currentTarget.password.value;
         const confirmpass: string = event.currentTarget.confirmpass.value;
         if (password === confirmpass) {
-          checkUnique(username).then(function (unique) {
-            if (unique) {
-              addUser(username, password);
-              setMessage("Account Created");
-              setNewUser(false);
-              event.currentTarget.password.value = "";
-            } else {
-              setMessage(
-                "An error occured: an account with that name already exists.",
-              );
-            }
-          });
+          if (username.length <= 5){
+            setMessage(
+              "An error occured: your username must have more than 5 characters.",
+            );
+          }
+          else if (password.length <= 5){
+            setMessage(
+              "An error occured: your password must have more than 5 characters.",
+            );
+          } else {
+            checkUnique(username).then(function(unique) {
+              if (!unique) {
+                setMessage(
+                  "An error occured: an account with that name already exists.",
+                );
+              } else {
+                addUser(username, password);
+                setMessage("Account Created");
+                setNewUser(false);
+                event.currentTarget.password.value = "";
+              }
+            });
+          }
         } else {
           setMessage("An error occured: passwords don't match.");
         }
