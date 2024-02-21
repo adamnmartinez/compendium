@@ -16,7 +16,7 @@ export default function AuthPage(props: {
   }
 
   async function verify(username: string, password: string) {
-    console.log("AuthPage: attempting to verify user...");
+    console.log("AuthPage: attempting to verify user... (Please allow a few moments for the backend to start)");
     let verified = false
     try {
       const data = await fetchUsers();
