@@ -1,5 +1,5 @@
 import BookList from "../components/BookList";
-import { Book } from "../components/App";
+import { AppHeader, Book } from "../components/App";
 import { ChangeEvent, useState } from "react";
 
 export default function LibraryPage(props: {
@@ -31,10 +31,7 @@ export default function LibraryPage(props: {
 
   return (
     <div className="libraryPage">
-      <header>Compendium</header> Created by{" "}
-      <a href="http://www.adamnmartinez.com" target="_blank">
-        Adam Martinez
-      </a>{" "}
+      <AppHeader></AppHeader>
       <p>
         Welcome, <b>{props.user}</b>
       </p>

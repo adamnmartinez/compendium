@@ -1,4 +1,4 @@
-import { Book } from "../components/App";
+import { AppHeader,Book } from "../components/App";
 
 export default function EditBookPage(props: {
   book: Book;
@@ -19,7 +19,7 @@ export default function EditBookPage(props: {
 
   return (
     <div className="editBookPage">
-      <header>Compendium</header>
+      <AppHeader></AppHeader>
       <br />
       <form
         onSubmit={(event) => {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { HOST, fetchUsers } from "../components/App";
+import { AppHeader, HOST, fetchUsers } from "../components/App";
 
 export default function AuthPage(props: {
   setAuthenticated: Function;
@@ -175,7 +175,7 @@ export default function AuthPage(props: {
 
   return (
     <div className="authPage">
-      <header>Compendium</header>
+      <AppHeader></AppHeader>
       <p>Please log in or sign up.</p>
       <i>{message}</i>
       <hr />

@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from "react";
-import { Book } from "../components/App";
+import { AppHeader, Book } from "../components/App";
 import { v4 as uuid } from "uuid";
 
 export default function AddBookPage(props: {
@@ -76,7 +76,7 @@ export default function AddBookPage(props: {
 
   return (
     <div className="addBookPage">
-      <header>Compendium</header>
+      <AppHeader></AppHeader>
       <br />
       Add an entry manually or by searching.
       <hr />

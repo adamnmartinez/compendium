@@ -73,6 +73,15 @@ export class Note {
   }
 } // Book Class Definition
 
+export function AppHeader(){
+  return(
+    <>
+      <header>Compendium</header>
+      by <a href="https://github.com/adamnmartinez">Adam Martinez</a>
+    </>
+  )
+}
+
 function App() {
   const [authenticated, setAuthenticated] = useState<Boolean>(false);
   const [user, setUser] = useState<string>("");
