@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { AppHeader, HOST, fetchUsers } from "../components/App";
+import { AppHeader, HOST } from "../components/App";
+import { v4 as uuid } from "uuid"
 
 export default function AuthPage(props: {
   setAuthenticated: Function;
@@ -15,44 +16,63 @@ export default function AuthPage(props: {
     props.setAuthenticated(true);
   }
 
-  async function verify(username: string, password: string) {
-    console.log("AuthPage: attempting to verify user... (Please allow a few moments for the backend to start)");
-    let verified = false
-    try {
-      const data = await fetchUsers();
-      data.forEach((user: any) => {
-        if (username === user.username && password === user.password) {
-          verified = true;
-        }
-      });
-      if (verified == false) setMessage("Incorrect Username or Password");
-    } catch (e) {
-      setMessage("An error occured while verifying your credentials with the database. This may be related to our server which sometimes needs a few minutes to spin up after a period of inactivity. Please try again in a few moments.");
-    }
+  async function register(id: string, username: string, password: string){
+    console.log("AuthPage: Starting registration")
     
-    return verified;
-  }
-
-  async function checkUnique(username: string) {
-    const data = await fetchUsers();
-    let unique = true;
-    data.forEach((user: any) => {
-      if (username === user.username) {
-        unique = false;
-      }
-    });
-    return unique;
-  }
-
-  async function addUser(username: string, password: string) {
-    await fetch(HOST + "/register", {
+    await fetch(HOST + "/userExists?", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        name: username,
-        pass: password,
+        username: username
       }),
-    });
+    }).then((response) => response.json()).then(data => {
+      if (data.exists){
+        setMessage("An account with that username already exists")
+        return
+      }
+    })
+
+    try{
+      await fetch(HOST + "/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: id,
+          password: password,
+          username: username
+        })
+      })
+    } catch (e) {
+      console.log(e)
+      setMessage("An error occured creating your account...")
+    } finally {
+      authenticate(username)
+    } 
+  }
+
+  async function login(username: string, password: string) {
+    try {
+      await fetch(HOST + "/authenticate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }), 
+      })
+      .then((response) => response.json())
+      .then(data => {
+        if(data.valid) {
+          setMessage("Login Success!")
+          authenticate(username)
+        } else {
+          setMessage("Invalid credentials, please try again.")
+        }
+      })
+    } catch(e) {
+      console.log(e)
+      setMessage("An error occured logging you in...")
+    }
   }
 
   const loginform = (
@@ -61,13 +81,8 @@ export default function AuthPage(props: {
         event.preventDefault();
         const username: string = event.currentTarget.username.value;
         const password: string = event.currentTarget.password.value;
-        let verified = false;
-        verify(username, password).then((result) => {
-          verified = result;
-          if (!result)
-            console.log("AuthPage: could not verify those credentials!");
-          if (verified) authenticate(username)
-        });
+        setMessage("Logging you in...")
+        login(username, password)
         event.currentTarget.password.value = "";
       }}
     >
@@ -108,28 +123,18 @@ export default function AuthPage(props: {
         const password: string = event.currentTarget.password.value;
         const confirmpass: string = event.currentTarget.confirmpass.value;
         if (password === confirmpass) {
-          if (username.length <= 5){
+          if (username.length < 6){
             setMessage(
-              "An error occured: your username must have more than 5 characters.",
+              "Your username and password must have 6 or more characters.",
             );
           }
-          else if (password.length <= 5){
+          else if (password.length < 6){
             setMessage(
-              "An error occured: your password must have more than 5 characters.",
+              "Your username and password must have 6 or more characters.",
             );
           } else {
-            checkUnique(username).then(function(unique) {
-              if (!unique) {
-                setMessage(
-                  "An error occured: an account with that name already exists.",
-                );
-              } else {
-                addUser(username, password);
-                setMessage("Account Created");
-                setNewUser(false);
-                event.currentTarget.password.value = "";
-              }
-            });
+            setMessage("Creating Account...")
+            register(uuid(), username, password)
           }
         } else {
           setMessage("An error occured: passwords don't match.");
