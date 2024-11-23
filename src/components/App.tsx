@@ -9,6 +9,9 @@ import AuthPage from "../pages/AuthPage";
 // API HOST
 export const HOST = 'https://compendium-api-v246.onrender.com'
 
+// TESTING
+//export const HOST = 'http://localhost:8080' 
+
 export async function fetchUsers() {
   try {
     const response = await fetch(HOST + "/users");
