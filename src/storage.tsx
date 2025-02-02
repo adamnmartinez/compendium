@@ -1,5 +1,5 @@
-import { Book } from "./components/App";
-import { Note } from "./components/App";
+import { Book } from "./App";
+import { Note } from "./App";
 export default class Storage {
   hasLocalStorage(): boolean {
     return window.localStorage.library ? true : false;

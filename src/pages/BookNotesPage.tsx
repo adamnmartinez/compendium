@@ -1,7 +1,7 @@
-import { Book } from "../components/App";
-import { Note } from "../components/App";
+import { Book } from "../App";
+import { Note } from "../App";
 import { ChangeEvent, useState, useEffect } from "react";
-import { fetchUsers } from "../components/App";
+import { HOST } from "../App";
 import { v4 as uuid } from "uuid";
 import NoteList from "../components/NoteList";
 
@@ -27,39 +27,39 @@ export default function BookNotesPage(props: {
 
   function renderNoteList() {
     console.log(`BookNotes: rendering notelist for \"${props.book.title}\"...`);
-    fetchUsers().then((data) => {
-      try {
-        data.forEach((thisuser: any) => {
-          if (thisuser.username === props.user) {
-            userlib = thisuser.userlib.library;
-          }
-        });
-        if (userlib.length !== 0) {
-          userlib.forEach((entry) => {
-            if (entry.title === props.book.title) {
-              entry.notes.forEach((note: Note) => {
-                const notefromuser = new Note(
-                  note.title,
-                  note.content,
-                  note.quote,
-                  note.chapter,
-                  note.page,
-                  note.speaker,
-                  note.uuid,
-                );
-                notesfromuser.push(notefromuser);
-              });
-            }
-          });
-        }
-      } catch (error) {
-        console.log("BookNotes: an error occured while getting user data");
-        throw error;
-      } finally {
-        setUsernotes(notesfromuser);
-        console.log("BookNotes: finished rendering notelist");
-      }
-    });
+    // fetchUsers().then((data) => {
+    //   try {
+    //     data.forEach((thisuser: any) => {
+    //       if (thisuser.username === props.user) {
+    //         userlib = thisuser.userlib.library;
+    //       }
+    //     });
+    //     if (userlib.length !== 0) {
+    //       userlib.forEach((entry) => {
+    //         if (entry.title === props.book.title) {
+    //           entry.notes.forEach((note: Note) => {
+    //             const notefromuser = new Note(
+    //               note.title,
+    //               note.content,
+    //               note.quote,
+    //               note.chapter,
+    //               note.page,
+    //               note.speaker,
+    //               note.uuid,
+    //             );
+    //             notesfromuser.push(notefromuser);
+    //           });
+    //         }
+    //       });
+    //     }
+    //   } catch (error) {
+    //     console.log("BookNotes: an error occured while getting user data");
+    //     throw error;
+    //   } finally {
+    //     setUsernotes(notesfromuser);
+    //     console.log("BookNotes: finished rendering notelist");
+    //   }
+    // });
   }
 
   async function awaitPull(book: Book, note: Book) {

@@ -1,5 +1,5 @@
 import BookList from "../components/BookList";
-import { AppHeader, Book } from "../components/App";
+import { AppHeader, Book } from "../App";
 import { ChangeEvent, useState } from "react";
 
 export default function LibraryPage(props: {

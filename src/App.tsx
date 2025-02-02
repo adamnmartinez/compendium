@@ -1,27 +1,16 @@
 import { useEffect, useState } from "react";
-import LibraryPage from "../pages/LibraryPage";
-import AddBookPage from "../pages/AddBookPage";
-import EditBookPage from "../pages/EditBookPage";
-import BookNotesPage from "../pages/BookNotesPage";
-import EditNotePage from "../pages/EditNotePage";
-import AuthPage from "../pages/AuthPage";
+import LibraryPage from "./pages/LibraryPage";
+import AddBookPage from "./pages/AddBookPage";
+import EditBookPage from "./pages/EditBookPage";
+import BookNotesPage from "./pages/BookNotesPage";
+import EditNotePage from "./pages/EditNotePage";
+import AuthPage from "./pages/AuthPage";
 
 // API HOST
 export const HOST = 'https://compendium-api-v246.onrender.com'
 
 // TESTING
 //export const HOST = 'http://localhost:8080' 
-
-export async function fetchUsers() {
-  try {
-    const response = await fetch(HOST + "/users");
-    const data = await response.json();
-    return data;
-  } catch (e) {
-    console.log(e);
-    return null;
-  }
-}
 
 export class Book {
   title: string;
@@ -86,58 +75,53 @@ export function AppHeader(){
 }
 
 function App() {
-  const [authenticated, setAuthenticated] = useState<Boolean>(false);
-  const [user, setUser] = useState<string>("");
-  const [library, setLibrary] = useState<Book[]>([]);
-  const [page, setPage] = useState<React.ReactElement>(<></>);
-
-  let userlib: any[] = [];
-  let booksfromuser: Book[] = [];
+  
+  const [user, setUser] = useState<string>("")
+  const [library, setLibrary] = useState<Book[]>([])
+  const [page, setPage] = useState<React.ReactElement>(<></>)
+  const [token, setToken] = useState<string>(localStorage.getItem("token") || "")
+  
+  let booksfromuser: Book[] = []
 
   function renderUserLibrary() {
     console.log("App: rendering library...");
-    fetchUsers().then((data) => {
-      try {
-        data.forEach((thisuser: any) => {
-          if (thisuser.username === user) {
-            userlib = thisuser.userlib.library;
+
+    try {
+      fetch(HOST + "/account", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token: token
+        })
+      }).then((response) => {
+        response.json().then((data) => {
+          setUser(data.user)
+
+          for (let i = 0; i < data.library.length; i++){
+            booksfromuser.push(data.library[i])
           }
-        });
-        if (userlib.length !== 0) {
-          userlib.forEach((entry) => {
-            const bookfromuser = new Book(
-              entry.title,
-              entry.author,
-              entry.publishedYear,
-              entry.pages,
-              entry.edition,
-              entry.uuid,
-            );
-            booksfromuser.push(bookfromuser);
-          });
-        }
-      } catch (error) {
-        console.log(
-          "App: an error occured while getting user library data in renderUserLibrary()",
-        );
-        throw error;
-      } finally {
-        setLibrary(booksfromuser);
-      }
-      console.log("App: finished rendering library");
-    });
-  }
+
+          setLibrary(booksfromuser);
+        })
+      });
+    } catch (error) {
+      console.log(
+        "App: an error occured while getting user library data in renderUserLibrary()",
+      );
+      throw error;
+    }
+  };
 
   // PAGE
   useEffect(() => {
-    if (authenticated) {
+    if (token != "") {
       console.log("App: authenticated user " + user);
     }
     renderUserLibrary();
-  }, [authenticated]);
+  }, [token]);
 
   useEffect(() => {
-    authenticated ? setPage(libraryPageComponent) : setPage(authPageComponent);
+    (token != "") ? setPage(libraryPageComponent) : setPage(authPageComponent);
   }, [library]);
 
   // Library Functions
@@ -240,20 +224,26 @@ function App() {
   const addBookPageComponent = (
     <AddBookPage pushFunc={addBook} toLibrary={goToLibrary} />
   );
+
   const libraryPageComponent = (
     <LibraryPage
       pullFunc={delBook}
       lib={library}
       user={user}
       reload={reload}
-      logout={() => setAuthenticated(false)}
+      logout={() => {
+        localStorage.removeItem("token") 
+        setToken("")
+        setPage(authPageComponent)
+      }}
       addBook={addBookPage}
       editBook={editBookPage}
       bookNotes={bookNotesPage}
     />
   );
+
   const authPageComponent = (
-    <AuthPage setAuthenticated={setAuthenticated} setUser={setUser} />
+    <AuthPage setToken={setToken} />
   );
 
   function addBookPage(): void {
@@ -303,6 +293,12 @@ function App() {
   function reload(): void {
     renderUserLibrary();
   }
+
+  // if (token == "") {
+  //   setPage(authPageComponent)
+  // } else {
+  //   setPage(libraryPageComponent)
+  // }
 
   return <div className="pageWrapper">{page}</div>;
 }

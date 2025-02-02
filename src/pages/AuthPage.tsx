@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { AppHeader, HOST } from "../components/App";
-import { v4 as uuid } from "uuid"
+import { AppHeader, HOST } from "../App";
 
 export default function AuthPage(props: {
-  setAuthenticated: Function;
-  setUser: Function;
+  setToken: Function;
 }) {
   const [newUser, setNewUser] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
@@ -14,55 +12,42 @@ export default function AuthPage(props: {
   const defaultColor = "black";
   const successColor = "darkgreen";
 
-  function authenticate(user: string) {
+  function authenticate(token: string) {
     console.log("AuthPage: user authenticated");
     setMsgColor(successColor);
     setMessage("Account verified! Logging you in...");
-    props.setUser(user);
-    props.setAuthenticated(true);
+
+    console.log("Setting Local Storage")
+    localStorage.setItem("token", token)
+    props.setToken(token);
   }
 
-  async function checkUserExists(username: string) {
-    const p = fetch(HOST + "/userExists?", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: username
-      }),
-    }).then((response) => response.json()).then(data => {
-      if (data.exists){
-        return true
-      } else {
-        return false
-      }
-    })
-
-    return p
-  }
-
-  async function register(id: string, username: string, password: string){
+  async function register(username: string, password: string){
     console.log("AuthPage: Starting registration")
     try{
-      await checkUserExists(username).then((response) => {
-        if(!response) {
           fetch(HOST + "/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              id: id,
-              password: password,
-              username: username
+              username: username,
+              password: password
             })
-          }).then(() => authenticate(username))
-        } else {
-          setMsgColor(errorColor);
-          setMessage("An account with that username already exists.")
-        }
-      })
-    } catch (e) {
-      console.log(e)
-      setMsgColor(errorColor);
-      setMessage("An error occured creating you account. Please try again later.")
+          }).then((response) => {
+            response.json().then((data) => {
+              console.log(response.status + " " + data.message)
+              if (response.status == 201){
+                login(username, password)
+              } else {
+                setMsgColor(errorColor);
+                setMessage("Invalid credentials, please try again.")
+                return
+              }
+            })
+          })
+      } catch (e) {
+        console.log(e)
+        setMsgColor(errorColor);
+        setMessage("An error occured creating you account. Please try again later.")
     }
   }
 
@@ -76,16 +61,23 @@ export default function AuthPage(props: {
           password: password,
         }), 
       })
-      .then((response) => response.json())
-      .then(data => {
-        if(data.valid) {
-          setMsgColor(successColor);
-          setMessage("Login Success!")
-          authenticate(username)
-        } else {
-          setMsgColor(errorColor);
-          setMessage("Invalid credentials, please try again.")
-        }
+      .then((response) => {
+        response.json().then((data) => {
+          console.log(response.status + " " + data.message)
+          if (response.status == 200){
+            setMsgColor(successColor)
+            setMessage("Login Success!")
+            authenticate(data.token)
+            return
+          } else if (response.status == 429){
+            setMsgColor(errorColor);
+            setMessage("Too many requests, please try again later.")
+          } else {
+            setMsgColor(errorColor);
+            setMessage("Invalid credentials, please try again.")
+            return
+          }
+        })
       })
     } catch(e) {
       console.log(e)
@@ -101,9 +93,10 @@ export default function AuthPage(props: {
         const username: string = event.currentTarget.username.value;
         const password: string = event.currentTarget.password.value;
         setMsgColor(defaultColor);
-        setMessage("Logging you in...")
+        setMessage("Logging you in (Please allow up to 15 minutes for the server to spin up)...")
         login(username, password)
         event.currentTarget.password.value = "";
+        
       }}
     >
       Log In
@@ -143,16 +136,9 @@ export default function AuthPage(props: {
         const password: string = event.currentTarget.password.value;
         const confirmpass: string = event.currentTarget.confirmpass.value;
         if (password === confirmpass) {
-          if (username.length < 6 || password.length < 6){
-            setMsgColor(errorColor);
-            setMessage(
-              "Your username and password must have 6 or more characters.",
-            );
-          } else {
-            setMsgColor(defaultColor);
-            setMessage("Creating Account...")
-            register(uuid(), username, password)
-          }
+          setMsgColor(defaultColor);
+          setMessage("Creating Account...")
+          register(username, password)
         } else {
           setMsgColor(errorColor);
           setMessage("An error occured: passwords don't match.");
@@ -199,6 +185,7 @@ export default function AuthPage(props: {
   return (
     <div className="authPage">
       <AppHeader></AppHeader>
+      <p><i>Thank you for your interest in Compendium! This site is currently undergoing some renovations, and may not work as intended!</i></p>
       <p>Please log in or sign up.</p>
       <i style={{color: msgcolor}}>{message}</i>
       <hr />
