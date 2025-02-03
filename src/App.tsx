@@ -7,10 +7,10 @@ import EditNotePage from "./pages/EditNotePage";
 import AuthPage from "./pages/AuthPage";
 
 // API HOST
-export const HOST = 'https://compendium-api-v246.onrender.com'
+//export const HOST = 'https://compendium-api-v246.onrender.com'
 
 // TESTING
-//export const HOST = 'http://localhost:8080' 
+export const HOST = 'http://localhost:8080' 
 
 export class Book {
   title: string;
@@ -116,8 +116,11 @@ function App() {
   useEffect(() => {
     if (token != "") {
       console.log("App: authenticated user " + user);
+      renderUserLibrary();
+      setPage(libraryPageComponent)
+    } else {
+      setPage(authPageComponent)
     }
-    renderUserLibrary();
   }, [token]);
 
   useEffect(() => {
@@ -127,10 +130,13 @@ function App() {
   // Library Functions
   async function addBook(book: Book) {
     try {
-      fetch(HOST + `/${user}/addBook`, {
+      fetch(HOST + `/account/library/add`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(book),
+        body: JSON.stringify({
+          token: token,
+          book: book
+        }),
       });
     } catch {
       console.log("App: an error occured in pushBook");
@@ -143,9 +149,13 @@ function App() {
 
   async function delBook(book: Book) {
     try {
-      fetch(HOST + `/${user}/delBook/${book.uuid}`, {
+      fetch(HOST + `/account/library/remove`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token: token,
+          uuid: book.uuid
+        })
       });
     } catch {
       console.log("App: an error occured in delBook");
@@ -158,10 +168,14 @@ function App() {
 
   async function modifyBook(old: Book, modified: Book) {
     try {
-      fetch(HOST + `/${user}/modBook/${old.uuid}`, {
+      fetch(HOST + `/account/library/edit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(modified),
+        body: JSON.stringify({
+          token: token,
+          uuid: old.uuid,
+          modified: modified
+        }),
       });
     } catch {
       console.log("App: an error occured in modifyBook");
@@ -175,10 +189,14 @@ function App() {
   // Note Functions
   async function addNote(book: Book, note: Note): Promise<Boolean> {
     try {
-      fetch(HOST + `/${user}/addNote/${book.uuid}`, {
+      fetch(HOST + `/account/entry/add`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(note),
+        body: JSON.stringify({
+          token: token,
+          bookID: book.uuid,
+          note: note
+        }),
       });
     } catch {
       console.log("App: an error occured in addNote");
@@ -188,12 +206,15 @@ function App() {
   }
 
   async function delNote(book: Book, note: Note) {
-    let book_id = book.uuid;
-    let note_id = note.uuid;
     try {
-      fetch(HOST + `/${user}/delNote/${book_id}/${note_id}`, {
+      fetch(HOST + `/account/entry/remove`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token: token,
+          bookID: book.uuid,
+          noteID: note.uuid
+        })
       });
     } catch {
       console.log("App: an error occured in modifyBook");
@@ -206,10 +227,15 @@ function App() {
 
   async function modifyNote(book: Book, note: Note, newNote: Note) {
     try {
-      fetch(HOST + `/${user}/modNote/${book.uuid}/${note.uuid}`, {
+      fetch(HOST + `/account/entry/edit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newNote),
+        body: JSON.stringify({
+          token: token,
+          bookID: book.uuid,
+          noteID: note.uuid,
+          modified: newNote
+        }),
       });
     } catch {
       console.log("App: an error occured in modifyNote");
