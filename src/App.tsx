@@ -7,10 +7,10 @@ import EditNotePage from "./pages/EditNotePage";
 import AuthPage from "./pages/AuthPage";
 
 // API HOST
-//export const HOST = 'https://compendium-api-v246.onrender.com'
+export const HOST = 'https://compendium-api-v246.onrender.com'
 
 // TESTING
-export const HOST = 'http://localhost:8080' 
+//export const HOST = 'http://localhost:8080' 
 
 export class Book {
   title: string;
