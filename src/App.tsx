@@ -108,7 +108,9 @@ function App() {
       console.log(
         "App: an error occured while getting user library data in renderUserLibrary()",
       );
-      throw error;
+      setLibrary([new Book(
+        "404", "User Library Not Found, Please log in again.", 0, 0, "", ""
+      )])
     }
   };
 
@@ -189,7 +191,7 @@ function App() {
   // Note Functions
   async function addNote(book: Book, note: Note): Promise<Boolean> {
     try {
-      fetch(HOST + `/account/entry/add`, {
+      fetch(HOST + `/account/library/entry/add`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -207,7 +209,7 @@ function App() {
 
   async function delNote(book: Book, note: Note) {
     try {
-      fetch(HOST + `/account/entry/remove`, {
+      fetch(HOST + `/account/library/entry/remove`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -227,7 +229,7 @@ function App() {
 
   async function modifyNote(book: Book, note: Note, newNote: Note) {
     try {
-      fetch(HOST + `/account/entry/edit`, {
+      fetch(HOST + `/account/library/entry/edit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -300,8 +302,8 @@ function App() {
   function bookNotesPage(book: Book): void {
     setPage(
       <BookNotesPage
+        token={token}
         book={book}
-        user={user}
         toLibrary={goToLibrary}
         editNote={editNotePage}
         deleteNote={delNote}
@@ -319,12 +321,6 @@ function App() {
   function reload(): void {
     renderUserLibrary();
   }
-
-  // if (token == "") {
-  //   setPage(authPageComponent)
-  // } else {
-  //   setPage(libraryPageComponent)
-  // }
 
   return <div className="pageWrapper">{page}</div>;
 }

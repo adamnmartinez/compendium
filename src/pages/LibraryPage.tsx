@@ -42,7 +42,7 @@ export default function LibraryPage(props: {
       <button className="reloadBtn" onClick={() => props.reload()}>
         Reload Library
       </button>
-      <button className="reloadBtn" onClick={() => props.logout()}>
+      <button className="logoutBtn" onClick={() => props.logout()}>
         Log Out
       </button>
       <input

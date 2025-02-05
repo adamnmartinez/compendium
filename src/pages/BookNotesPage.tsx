@@ -7,18 +7,18 @@ import NoteList from "../components/NoteList";
 
 export default function BookNotesPage(props: {
   book: Book;
-  user: string;
+  //user: string;
   toLibrary: Function;
   editNote: Function;
   deleteNote: Function;
   renderNotesPage: Function;
   newNote: Function;
+  token: string;
 }) {
   const [formVis, setFormVis] = useState<Boolean>(false);
   const [noteQuery, setNoteQuery] = useState<string>("");
   const [usernotes, setUsernotes] = useState<Note[]>([]);
 
-  let userlib: any[] = [];
   let notesfromuser: Note[] = [];
 
   function formToggle(): void {
@@ -27,39 +27,42 @@ export default function BookNotesPage(props: {
 
   function renderNoteList() {
     console.log(`BookNotes: rendering notelist for \"${props.book.title}\"...`);
-    // fetchUsers().then((data) => {
-    //   try {
-    //     data.forEach((thisuser: any) => {
-    //       if (thisuser.username === props.user) {
-    //         userlib = thisuser.userlib.library;
-    //       }
-    //     });
-    //     if (userlib.length !== 0) {
-    //       userlib.forEach((entry) => {
-    //         if (entry.title === props.book.title) {
-    //           entry.notes.forEach((note: Note) => {
-    //             const notefromuser = new Note(
-    //               note.title,
-    //               note.content,
-    //               note.quote,
-    //               note.chapter,
-    //               note.page,
-    //               note.speaker,
-    //               note.uuid,
-    //             );
-    //             notesfromuser.push(notefromuser);
-    //           });
-    //         }
-    //       });
-    //     }
-    //   } catch (error) {
-    //     console.log("BookNotes: an error occured while getting user data");
-    //     throw error;
-    //   } finally {
-    //     setUsernotes(notesfromuser);
-    //     console.log("BookNotes: finished rendering notelist");
-    //   }
-    // });
+    try {
+      fetch(HOST + "/account", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token: props.token
+        })
+      }).then((response) => response.json()).then((data) => {
+        let requestedBook = null
+
+        for (let i = 0; i < data.library.length; i++){
+          if (data.library[i].uuid == props.book.uuid) {
+            requestedBook = data.library[i]
+            break;
+          }
+        }
+
+        if (!requestedBook) {
+          setUsernotes([new Note("404","Entries could not be updated, please log in again.", "", "", 0, "", "",)])
+          return
+        }
+
+        setUsernotes([])
+
+        for (let i = 0; i < requestedBook.notes.length; i++) {
+          notesfromuser.push(requestedBook.notes[i])
+        }
+
+        setUsernotes(notesfromuser);
+      })
+    } catch (e) {
+      console.log("BookNotes: an error occured while getting user data");
+      console.error(e)
+      setUsernotes([new Note("500","Page Error Occured", "", "", 0, "", "",)])
+      return
+    }
   }
 
   async function awaitPull(book: Book, note: Book) {

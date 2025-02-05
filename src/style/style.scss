@@ -5,6 +5,7 @@
 
 // Vars
 $affirmative_color: rgb(144, 239, 144);
+$negative_color: rgb(255, 181, 181);
 $delete_color: rgb(250, 120, 120);
 
 // Scrollbar
@@ -116,6 +117,7 @@ button {
     }
 
     &.addBookBtn,
+    &.logoutBtn,
     &.reloadBtn {
       width: 100%;
       padding-top: 3px;
@@ -123,8 +125,22 @@ button {
       font-size: 1.2rem;
     }
 
-    &.reloadBtn {
+    &.reloadBtn, &.logoutBtn {
       margin-top: 10px;
+    }
+
+    &.addBookBtn {
+      background-color: lighten($affirmative_color, 20%);
+      &:hover {
+        background-color: $affirmative_color;
+      }
+    }
+
+    &.logoutBtn {
+      background-color: lighten($delete_color, 20%);
+      &:hover {
+        background-color: $delete_color;
+      }
     }
   }
 

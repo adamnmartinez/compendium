@@ -94,15 +94,26 @@ button {
 .libraryPage button.bookOperations.deleteBtn:hover {
   background-color: rgb(250, 120, 120);
 }
-.libraryPage button.addBookBtn,
-.libraryPage button.reloadBtn {
+.libraryPage button.addBookBtn, .libraryPage button.logoutBtn, .libraryPage button.reloadBtn {
   width: 100%;
   padding-top: 3px;
   padding-bottom: 3px;
   font-size: 1.2rem;
 }
-.libraryPage button.reloadBtn {
+.libraryPage button.reloadBtn, .libraryPage button.logoutBtn {
   margin-top: 10px;
+}
+.libraryPage button.addBookBtn {
+  background-color: #e9fce9;
+}
+.libraryPage button.addBookBtn:hover {
+  background-color: rgb(144, 239, 144);
+}
+.libraryPage button.logoutBtn {
+  background-color: #fedada;
+}
+.libraryPage button.logoutBtn:hover {
+  background-color: rgb(250, 120, 120);
 }
 .libraryPage .bookButtons {
   padding-top: 10px;
@@ -512,4 +523,4 @@ button {
   .pageWrapper {
     padding: 30px 30px 0px 30px;
   }
-} /*# sourceMappingURL=style.css.map */
+}/*# sourceMappingURL=style.css.map */
