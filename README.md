@@ -16,4 +16,4 @@ Then, go into the directory and install the required dependencies.
 cd compendium
 npm install
 ```
-You can start running the web application by using `npm start` while in the root directory. This will spin up the web server and send you a link to connect to it using your browser.
+You can start running the web application by using `npm run dev` while in the root directory. This will spin up the web server and send you a link to connect to it using your browser.
