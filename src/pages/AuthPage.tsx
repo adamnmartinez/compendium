@@ -185,7 +185,6 @@ export default function AuthPage(props: {
   return (
     <div className="authPage">
       <AppHeader></AppHeader>
-      <p><i>Thank you for your interest in Compendium! This site is currently undergoing some renovations, and may not work as intended!</i></p>
       <p>Please log in or sign up.</p>
       <i style={{color: msgcolor}}>{message}</i>
       <hr />
