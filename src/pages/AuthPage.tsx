@@ -14,7 +14,10 @@ export default function AuthPage(props: {
   const successColor = "darkgreen";
 
   const timedFetch = (url: string, options: RequestInit, timeout: number): Promise<Response> => {
-
+    /*
+      A modified fetch function which can return a timeout response
+    */
+   
     const timeoutPromise = new Promise((resolve, _) =>
         setTimeout(() => resolve(new Response(
           JSON.stringify({

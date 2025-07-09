@@ -81,7 +81,7 @@ function App() {
   const [library, setLibrary] = useState<Book[]>([])
   const [page, setPage] = useState<React.ReactElement>(<></>)
   const [token, setToken] = useState<string>(localStorage.getItem("token") || "")
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   
   let booksfromuser: Book[] = []
 
