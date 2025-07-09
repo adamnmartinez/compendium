@@ -5,6 +5,7 @@ import EditBookPage from "./pages/EditBookPage";
 import BookNotesPage from "./pages/BookNotesPage";
 import EditNotePage from "./pages/EditNotePage";
 import AuthPage from "./pages/AuthPage";
+import Loading from "./components/LoadingOverlay";
 
 // API HOST
 export const HOST = 'https://compendium-api-v246.onrender.com'
@@ -80,11 +81,13 @@ function App() {
   const [library, setLibrary] = useState<Book[]>([])
   const [page, setPage] = useState<React.ReactElement>(<></>)
   const [token, setToken] = useState<string>(localStorage.getItem("token") || "")
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   
   let booksfromuser: Book[] = []
 
   function renderUserLibrary() {
     console.log("App: rendering library...");
+    setIsLoading(true)
 
     try {
       fetch(HOST + "/account", {
@@ -111,6 +114,8 @@ function App() {
       setLibrary([new Book(
         "404", "User Library Not Found, Please log in again.", 0, 0, "", ""
       )])
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -271,7 +276,7 @@ function App() {
   );
 
   const authPageComponent = (
-    <AuthPage setToken={setToken} />
+    <AuthPage setLoading={setIsLoading} setToken={setToken} />
   );
 
   function addBookPage(): void {
@@ -284,6 +289,7 @@ function App() {
         editFunc={modifyBook}
         book={book}
         toLibrary={goToLibrary}
+        setLoading={setIsLoading}
       />,
     );
   }
@@ -322,7 +328,12 @@ function App() {
     renderUserLibrary();
   }
 
-  return <div className="pageWrapper">{page}</div>;
+  return <div>
+      <Loading hidden={!isLoading} />
+      <div className="pageWrapper">
+        {page}
+    </div>
+    </div>;
 }
 
 export default App;

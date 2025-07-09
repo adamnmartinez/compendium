@@ -3,6 +3,7 @@ import { AppHeader, HOST } from "../App";
 
 export default function AuthPage(props: {
   setToken: Function;
+  setLoading: Function;
 }) {
   const [newUser, setNewUser] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
@@ -11,6 +12,27 @@ export default function AuthPage(props: {
   const errorColor = "darkred";
   const defaultColor = "black";
   const successColor = "darkgreen";
+
+  const timedFetch = (url: string, options: RequestInit, timeout: number): Promise<Response> => {
+
+    const timeoutPromise = new Promise((resolve, _) =>
+        setTimeout(() => resolve(new Response(
+          JSON.stringify({
+            error: "Request Timed Out",
+            data: {
+              message: "Request Timeout"
+            }
+          }), {
+            status: 408,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        )), timeout)
+    );
+
+    return Promise.race([fetch(url, options), timeoutPromise]) as Promise<Response>
+  }
 
   function authenticate(token: string) {
     console.log("AuthPage: user authenticated");
@@ -24,6 +46,7 @@ export default function AuthPage(props: {
 
   async function register(username: string, password: string){
     console.log("AuthPage: Starting registration")
+    props.setLoading(true)
     try{
           fetch(HOST + "/register", {
             method: "POST",
@@ -48,19 +71,22 @@ export default function AuthPage(props: {
         console.log(e)
         setMsgColor(errorColor);
         setMessage("An error occured creating you account. Please try again later.")
-    }
+      } finally {
+        props.setLoading(false)
+      }
   }
 
   async function login(username: string, password: string) {
+    props.setLoading(true)
     try {
-      await fetch(HOST + "/authenticate", {
+      await timedFetch(HOST + "/authenticate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           username: username,
           password: password,
         }), 
-      })
+      }, 10000)
       .then((response) => {
         response.json().then((data) => {
           console.log(response.status + " " + data.message)
@@ -72,6 +98,9 @@ export default function AuthPage(props: {
           } else if (response.status == 429){
             setMsgColor(errorColor);
             setMessage("Too many requests, please try again later.")
+          } else if (response.status == 408){
+            setMsgColor(errorColor);
+            setMessage("Looks like the request timed out, maybe our servers our asleep? Please try again in a few minutes.")
           } else {
             setMsgColor(errorColor);
             setMessage("Invalid credentials, please try again.")
@@ -83,6 +112,8 @@ export default function AuthPage(props: {
       console.log(e)
       setMsgColor(errorColor);
       setMessage("An error occured logging you in. Please try again later.")
+    } finally {
+      props.setLoading(false)
     }
   }
 

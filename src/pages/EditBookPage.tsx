@@ -4,13 +4,17 @@ export default function EditBookPage(props: {
   book: Book;
   toLibrary: Function;
   editFunc: Function;
+  setLoading: Function;
 }) {
   async function awaitEdit(oldBook: Book, newBook: Book) {
+    props.setLoading(true)
     console.log(`EditBookPage: modifying book \"${oldBook.title}\"`);
     try {
       await props.editFunc(oldBook, newBook);
     } catch {
       `EditBookPage: An error occured in awaitPush while modifying ${oldBook.title}`;
+    } finally {
+      props.setLoading(false)
     }
     console.log(
       `EditBookPage: successfully modified \"${oldBook.title}\" to \"${newBook.title}\"`,

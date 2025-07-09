@@ -19,8 +19,6 @@ export default function BookNotesPage(props: {
   const [noteQuery, setNoteQuery] = useState<string>("");
   const [usernotes, setUsernotes] = useState<Note[]>([]);
 
-  let notesfromuser: Note[] = [];
-
   function formToggle(): void {
     formVis ? setFormVis(false) : setFormVis(true);
   }
@@ -50,6 +48,8 @@ export default function BookNotesPage(props: {
         }
 
         setUsernotes([])
+
+        let notesfromuser: Note[] = [];
 
         for (let i = 0; i < requestedBook.notes.length; i++) {
           notesfromuser.push(requestedBook.notes[i])
