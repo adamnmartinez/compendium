@@ -7,6 +7,8 @@
 $affirmative_color: rgb(144, 239, 144);
 $negative_color: rgb(255, 181, 181);
 $delete_color: rgb(250, 120, 120);
+$dark_mode: false;
+$dark_bg: rgb(38, 38, 38);
 
 // Scrollbar
 ::-webkit-scrollbar {
@@ -26,6 +28,15 @@ $delete_color: rgb(250, 120, 120);
 :root {
   font-family: Lora;
   font-size: 16px;
+
+  @if $dark_mode == false {
+    color: black;
+    background-color: white;
+  } @else {
+    color: white;
+    background-color: $dark_bg;
+  }
+
 }
 
 header {
@@ -51,8 +62,7 @@ button {
   // transition: opacity 0.3s linear;
 
   .dimmer {
-    opacity: 1;
-    background-color: rgb(255, 255, 255);
+    @if $dark_mode == false { background-color: rgb(255, 255, 255); } @else { background-color: $dark_bg; }
     position: fixed;
     width: 100%;
     height: 100%;
@@ -74,11 +84,26 @@ button {
     }
 
     p {
-      color: rgb(0, 0, 0);
+      @if $dark_mode == false { color: rgb(0, 0, 0); } @else { color: rgb(255, 255, 255); }
     }
 
   }
 }
+
+a {
+    text-decoration: none;
+    @if $dark_mode == false { 
+      color: black;
+    } @else { 
+      color: white
+    }
+    
+    transition: color 250ms;
+
+    &:hover {
+      color: $delete_color;
+    }
+} 
 
 // Page Styles
 .libraryPage {
@@ -92,16 +117,6 @@ button {
     font-family: inherit;
     font-size: inherit;
     text-align: center;
-  }
-
-  a {
-    text-decoration: none;
-    color: black;
-    transition: color 250ms;
-
-    &:hover {
-      color: $delete_color;
-    }
   }
 
   ul {
@@ -573,6 +588,14 @@ button {
 
 .authPage {
   input {
+    @if $dark_mode == false { 
+      background-color: rgb(255, 255, 255);
+      color: black
+    } @else { 
+      background-color: $dark_bg; 
+      color: white;
+      border-color: white;
+    }
     width: 100%;
     font-size: inherit;
     font-family: inherit;
@@ -584,6 +607,14 @@ button {
     box-sizing: border-box;
   }
   button {
+    @if $dark_mode == false { 
+      background-color: rgb(255, 255, 255);
+      color: black;
+    } @else { 
+      background-color: $dark_bg; 
+      color: white;
+      border-color: white;
+    }
     width: 100%;
     margin-bottom: 5px;
     margin-top: 5px;

@@ -6,6 +6,7 @@ import BookNotesPage from "./pages/BookNotesPage";
 import EditNotePage from "./pages/EditNotePage";
 import AuthPage from "./pages/AuthPage";
 import Loading from "./components/LoadingOverlay";
+import Swal from "sweetalert2";
 
 // API HOST
 export const HOST = 'https://compendium-api-v246.onrender.com'
@@ -70,7 +71,7 @@ export function AppHeader(){
   return(
     <>
       <header>Compendium</header>
-      by <a href="https://github.com/adamnmartinez">Adam Martinez</a>
+      by <a className="headerlink" href="https://github.com/adamnmartinez">Adam Martinez</a>
     </>
   )
 }
@@ -137,7 +138,7 @@ function App() {
   // Library Functions
   async function addBook(book: Book) {
     try {
-      fetch(HOST + `/account/library/add`, {
+      await fetch(HOST + `/account/library/add`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -149,28 +150,59 @@ function App() {
       console.log("App: an error occured in pushBook");
       return false;
     } finally {
+      Swal.fire({
+        title: 'Book Added',
+        text: 'Want to get started taking notes?',
+        icon: 'success',
+        confirmButtonText: "Let's Go!",
+        denyButtonText: 'Maybe Later...',
+        showDenyButton: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          bookNotesPage(book)
+        }
+      })
       setTimeout(() => renderUserLibrary(), 500);
     }
     return true;
   }
 
   async function delBook(book: Book) {
-    try {
-      fetch(HOST + `/account/library/remove`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          token: token,
-          uuid: book.uuid
-        })
-      });
-    } catch {
-      console.log("App: an error occured in delBook");
-      return false;
-    } finally {
-      setTimeout(() => renderUserLibrary(), 500);
-    }
-    return true;
+    Swal.fire({
+      title: 'Delete Book?',
+      text: 'This entry, and all its notes, will be deleted. Are you sure you want to proceed?',
+      icon: 'question',
+      confirmButtonText: "I changed my mind!",
+      denyButtonText: 'Reduce it to atoms!',
+      showDenyButton: true
+    }).then((result) => {
+      if (result.isDenied) {
+        try {
+          fetch(HOST + `/account/library/remove`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              token: token,
+              uuid: book.uuid
+            })
+          });
+        } catch {
+          console.log("App: an error occured in delBook");
+          return false;
+        } finally {
+          Swal.fire({
+            title: 'Book Deleted',
+            text: 'Adiós, libro.',
+            icon: 'success',
+            confirmButtonText: "OK",
+          })
+          setTimeout(() => renderUserLibrary(), 500);
+        }
+        return true;
+      } else {
+        return false
+      }
+    })
   }
 
   async function modifyBook(old: Book, modified: Book) {
@@ -188,7 +220,13 @@ function App() {
       console.log("App: an error occured in modifyBook");
       return false;
     } finally {
-      setTimeout(() => renderUserLibrary(), 500);
+      Swal.fire({
+          title: 'Changes Applied!',
+          text: 'You may need to wait a minute or two for changes to be reflected in your library.',
+          icon: 'success',
+          confirmButtonText: "OK",
+      })
+      setTimeout(() => renderUserLibrary(), 1000);
     }
     return true;
   }
@@ -224,7 +262,7 @@ function App() {
         })
       });
     } catch {
-      console.log("App: an error occured in modifyBook");
+      console.log("App: an error occured in delNote");
       return false;
     } finally {
       //setTimeout(() => bookNotesPage(book), 500);
@@ -328,12 +366,12 @@ function App() {
     renderUserLibrary();
   }
 
-  return <div>
+  return (<div>
       <Loading hidden={!isLoading} />
       <div className="pageWrapper">
         {page}
-    </div>
-    </div>;
+      </div>
+    </div>);
 }
 
 export default App;

@@ -18,6 +18,8 @@
 :root {
   font-family: Lora;
   font-size: 16px;
+  color: black;
+  background-color: white;
 }
 
 header {
@@ -39,7 +41,6 @@ button {
 }
 
 .loadingscreen .dimmer {
-  opacity: 1;
   background-color: rgb(255, 255, 255);
   position: fixed;
   width: 100%;
@@ -62,6 +63,15 @@ button {
   color: rgb(0, 0, 0);
 }
 
+a {
+  text-decoration: none;
+  color: black;
+  transition: color 250ms;
+}
+a:hover {
+  color: rgb(250, 120, 120);
+}
+
 .libraryPage input {
   padding: 5px;
   box-sizing: border-box;
@@ -72,14 +82,6 @@ button {
   font-family: inherit;
   font-size: inherit;
   text-align: center;
-}
-.libraryPage a {
-  text-decoration: none;
-  color: black;
-  transition: color 250ms;
-}
-.libraryPage a:hover {
-  color: rgb(250, 120, 120);
 }
 .libraryPage ul {
   list-style: none;
@@ -501,6 +503,8 @@ button {
 }
 
 .authPage input {
+  background-color: rgb(255, 255, 255);
+  color: black;
   width: 100%;
   font-size: inherit;
   font-family: inherit;
@@ -512,6 +516,8 @@ button {
   box-sizing: border-box;
 }
 .authPage button {
+  background-color: rgb(255, 255, 255);
+  color: black;
   width: 100%;
   margin-bottom: 5px;
   margin-top: 5px;
