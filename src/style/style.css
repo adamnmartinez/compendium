@@ -34,6 +34,10 @@ button {
   padding: 50px 130px 0px 130px;
 }
 
+.swal-popup {
+  font-family: Lora;
+}
+
 .loadingscreen .dimmer {
   opacity: 1;
   background-color: rgb(255, 255, 255);

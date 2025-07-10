@@ -1,133 +1,162 @@
 import { useState } from "react";
-import { AppHeader, HOST } from "../App";
+import { AppHeader } from "../App";
+import { loginCall, registerCall } from "../components/API";
+import Swal from "sweetalert2";
 
 export default function AuthPage(props: {
   setToken: Function;
   setLoading: Function;
 }) {
   const [newUser, setNewUser] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
-  const [msgcolor, setMsgColor] = useState<string>("");
-
-  const errorColor = "darkred";
-  const defaultColor = "black";
-  const successColor = "darkgreen";
-
-  const timedFetch = (url: string, options: RequestInit, timeout: number): Promise<Response> => {
-    /*
-      A modified fetch function which can return a timeout response
-    */
-   
-    const timeoutPromise = new Promise((resolve, _) =>
-        setTimeout(() => resolve(new Response(
-          JSON.stringify({
-            error: "Request Timed Out",
-            data: {
-              message: "Request Timeout"
-            }
-          }), {
-            status: 408,
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          }
-        )), timeout)
-    );
-
-    return Promise.race([fetch(url, options), timeoutPromise]) as Promise<Response>
-  }
 
   function authenticate(token: string) {
-    console.log("AuthPage: user authenticated");
-    setMsgColor(successColor);
-    setMessage("Account verified! Logging you in...");
-
-    console.log("Setting Local Storage")
+    console.log("AuthPage: User authenticated! Logging them in...");
+    console.log("AuthPage: Saving data to local browser storage...")
     localStorage.setItem("token", token)
     props.setToken(token);
   }
 
   async function register(username: string, password: string){
-    console.log("AuthPage: Starting registration")
-    props.setLoading(true)
-    try{
-          fetch(HOST + "/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              username: username,
-              password: password
-            })
-          }).then((response) => {
-            response.json().then((data) => {
-              console.log(response.status + " " + data.message)
-              if (response.status == 201){
-                login(username, password)
-              } else {
-                setMsgColor(errorColor);
-                setMessage("Invalid credentials, please try again.")
-                return
-              }
-            })
-          })
-      } catch (e) {
-        console.log(e)
-        setMsgColor(errorColor);
-        setMessage("An error occured creating you account. Please try again later.")
-      } finally {
-        props.setLoading(false)
-      }
-  }
+    /*
+      Use the LoginCall API method to perform attempt a log-in
+    */
 
-  async function login(username: string, password: string) {
     props.setLoading(true)
+
     try {
-      await timedFetch(HOST + "/authenticate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: username,
-          password: password,
-        }), 
-      }, 10000)
-      .then((response) => {
-        response.json().then((data) => {
-          console.log(response.status + " " + data.message)
-          if (response.status == 200){
-            setMsgColor(successColor)
-            setMessage("Login Success!")
-            authenticate(data.token)
-            return
-          } else if (response.status == 429){
-            setMsgColor(errorColor);
-            setMessage("Too many requests, please try again later.")
-          } else if (response.status == 408){
-            setMsgColor(errorColor);
-            setMessage("Looks like the request timed out, maybe our servers our asleep? Please try again in a few minutes.")
-          } else {
-            setMsgColor(errorColor);
-            setMessage("Invalid credentials, please try again.")
-            return
-          }
+      const response = await registerCall(username, password, 10000)
+      const data = await response.json()
+      console.log(`${response.status} ${data.message}`)
+
+      if (response.status == 201){
+        // Success
+        login(username, password)
+        authenticate(data.token)
+        return
+      } else if (response.status == 429){
+        // Rate-Limit
+        Swal.fire({
+          title: 'Slow Down!',
+          text: 'Too many requests, please try again later.',
+          icon: 'error',
+          confirmButtonText: 'OK'
         })
-      })
-    } catch(e) {
+      } else if (response.status == 408){
+        // Request Timeout
+        Swal.fire({
+          title: 'Request Timed Out!',
+          text: 'Looks like our servers fell asleep, try again in about 10 minutes!.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        })
+      } else if (response.status == 400){
+        // Bad Request
+        Swal.fire({
+          title: "Bad Request!",
+          text: data.message,
+          icon: 'error',
+          confirmButtonText: 'OK'
+        })
+      } else if (response.status == 409){
+        // Taken User
+        Swal.fire({
+          title: "Username Taken!",
+          text: "Sorry, looks like that username is taken! Try something else.",
+          icon: 'error',
+          confirmButtonText: 'OK'
+        })
+      } else {
+        // Other Error
+        Swal.fire({
+          title: "Unexpected Error!",
+          text: 'Something went wrong, unexpectedly! Please try again later. If the issue persists, feel free to contact us!',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        })
+        return
+      }
+    } catch (e) {
       console.log(e)
-      setMsgColor(errorColor);
-      setMessage("An error occured logging you in. Please try again later.")
+      Swal.fire({
+        title: "Unexpected Error!",
+        text: 'Something went wrong, unexpectedly! Please try again later. If the issue persists, feel free to contact us!',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      })
     } finally {
       props.setLoading(false)
     }
   }
 
-  const loginform = (
+  async function login(username: string, password: string) {
+    /*
+      Use the LoginCall API method to perform attempt a log-in
+    */
+
+    props.setLoading(true)
+
+    try {
+      const response = await loginCall(username, password, 10000)
+      const data = await response.json()
+      console.log(`${response.status} ${data.message}`)
+
+      if (response.status == 200){
+        // Success
+        authenticate(data.token)
+        return
+      } else if (response.status == 429){
+        // Rate-Limit
+        Swal.fire({
+          title: 'Slow Down!',
+          text: 'Too many requests, please try again later.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        })
+      } else if (response.status == 408){
+        // Request Timeout
+        Swal.fire({
+          title: 'Request Timed Out!',
+          text: 'Looks like our servers fell asleep, try again in about 10 minutes!.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        })
+      } else if (response.status == 401){
+        // Bad Creds
+        Swal.fire({
+          title: "Login Failed!",
+          text: 'Your username or password is incorrect!',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        })
+      } else {
+        // Other Error
+        Swal.fire({
+          title: "Unexpected Error!",
+          text: 'Something went wrong, unexpectedly! Please try again later. If the issue persists, feel free to contact us!',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        })
+        return
+      }
+    } catch (e) {
+      console.log(e)
+      Swal.fire({
+        title: "Unexpected Error!",
+        text: 'Something went wrong, unexpectedly! Please try again later. If the issue persists, feel free to contact us!',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      })
+    } finally {
+      props.setLoading(false)
+    }
+  }
+
+  const loginForm = (
     <form
       onSubmit={(event) => {
         event.preventDefault();
         const username: string = event.currentTarget.username.value;
         const password: string = event.currentTarget.password.value;
-        setMsgColor(defaultColor);
-        setMessage("Logging you in (Please allow up to 15 minutes for the server to spin up)...")
         login(username, password)
         event.currentTarget.password.value = "";
         
@@ -162,7 +191,7 @@ export default function AuthPage(props: {
     </form>
   );
 
-  const registerform = (
+  const registerForm = (
     <form
       onSubmit={(event) => {
         event.preventDefault();
@@ -170,12 +199,14 @@ export default function AuthPage(props: {
         const password: string = event.currentTarget.password.value;
         const confirmpass: string = event.currentTarget.confirmpass.value;
         if (password === confirmpass) {
-          setMsgColor(defaultColor);
-          setMessage("Creating Account...")
           register(username, password)
         } else {
-          setMsgColor(errorColor);
-          setMessage("An error occured: passwords don't match.");
+          Swal.fire({
+            title: "Passwords Mismatch!",
+            text: 'Make sure both passwords are the same!',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          })
         }
       }}
     >
@@ -220,9 +251,8 @@ export default function AuthPage(props: {
     <div className="authPage">
       <AppHeader></AppHeader>
       <p>Please log in or sign up.</p>
-      <i style={{color: msgcolor}}>{message}</i>
       <hr />
-      {newUser ? registerform : loginform}
+      {newUser ? registerForm : loginForm}
     </div>
   );
 }
