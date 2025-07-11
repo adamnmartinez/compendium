@@ -45,7 +45,7 @@ export default function AuthPage(props: {
         // Request Timeout
         Swal.fire({
           title: 'Request Timed Out!',
-          text: 'Looks like our servers fell asleep, try again in about 10 minutes!.',
+          text: 'Looks like our servers fell asleep, try again in about 10 minutes!',
           icon: 'error',
           confirmButtonText: 'OK'
         })
@@ -168,6 +168,7 @@ export default function AuthPage(props: {
         defaultValue=""
         placeholder="Username"
         required
+        className="usernameInput"
       ></input>{" "}
       <br />
       <input
@@ -176,6 +177,7 @@ export default function AuthPage(props: {
         defaultValue=""
         placeholder="Password"
         required
+        className="passwordInput"
       ></input>{" "}
       <br />
       <button className="submitBtn" type="submit">
@@ -216,6 +218,7 @@ export default function AuthPage(props: {
         placeholder="Username"
         defaultValue=""
         required
+        className="usernameInput"
       ></input>{" "}
       <br />
       <input
@@ -224,6 +227,7 @@ export default function AuthPage(props: {
         defaultValue=""
         placeholder="Password"
         required
+        className="passwordInput"
       ></input>{" "}
       <br />
       <input
@@ -232,6 +236,7 @@ export default function AuthPage(props: {
         defaultValue=""
         placeholder="Confirm Password"
         required
+        className="passwordInput"
       ></input>{" "}
       <br />
       <button className="submitBtn" type="submit">

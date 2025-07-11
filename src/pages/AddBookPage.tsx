@@ -1,5 +1,6 @@
 import { ChangeEvent, useState } from "react";
-import { AppHeader, Book } from "../App";
+import { AppHeader } from "../App";
+import { Book } from "../components/Interface";
 import { v4 as uuid } from "uuid";
 
 export default function AddBookPage(props: {

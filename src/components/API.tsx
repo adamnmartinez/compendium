@@ -94,4 +94,38 @@ const registerCall = async (username: string, password: string, timeout: number 
     }
 }
 
-export { timedFetch, loginCall, registerCall }
+const getLibraryCall = async (token: string, timeout: number = 10000): Promise<Response> => {
+    /*
+        Register API Call, 
+        Input: Username and Password Strings
+        Output: Promise<Response>
+
+        Default timeout after 10 seconds.
+    */ 
+    try {
+        const response = timedFetch(HOST + "/account", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              token: token
+            })
+          }, timeout)
+        return response
+    } catch (e) {
+        return new Response(
+          JSON.stringify({
+            error: "Internal Error",
+            data: {
+              message: e
+            }
+          }), {
+            status: 500,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        )
+    }
+}
+
+export { timedFetch, loginCall, registerCall, getLibraryCall }

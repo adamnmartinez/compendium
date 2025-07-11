@@ -1,5 +1,4 @@
-import { Book } from "../App";
-import { Note } from "../App";
+import { Book, Note } from "../components/Interface";
 
 export default function EditNotePage(props: {
   note: Note;

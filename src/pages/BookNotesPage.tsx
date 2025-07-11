@@ -1,5 +1,4 @@
-import { Book } from "../App";
-import { Note } from "../App";
+import { Book, Note } from "../components/Interface";
 import { ChangeEvent, useState, useEffect } from "react";
 import { HOST } from "../App";
 import { v4 as uuid } from "uuid";

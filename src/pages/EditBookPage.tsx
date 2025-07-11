@@ -1,4 +1,5 @@
-import { AppHeader,Book } from "../App";
+import { AppHeader } from "../App";
+import { Book } from "../components/Interface";
 
 export default function EditBookPage(props: {
   book: Book;

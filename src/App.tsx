@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+
+// Pages
 import LibraryPage from "./pages/LibraryPage";
 import AddBookPage from "./pages/AddBookPage";
 import EditBookPage from "./pages/EditBookPage";
@@ -6,66 +9,14 @@ import BookNotesPage from "./pages/BookNotesPage";
 import EditNotePage from "./pages/EditNotePage";
 import AuthPage from "./pages/AuthPage";
 import Loading from "./components/LoadingOverlay";
-import Swal from "sweetalert2";
 
-// API HOST
+// Components
+import { Book, Note } from "./components/Interface";
+
+// API Methods
+import { getLibraryCall } from "./components/API"
+
 export const HOST = 'https://compendium-api-v246.onrender.com'
-
-// TESTING
-//export const HOST = 'http://localhost:8080' 
-
-export class Book {
-  title: string;
-  author: string;
-  publishedYear: number;
-  pages: number;
-  edition: string;
-  notes: Note[];
-  uuid: string;
-  constructor(
-    title: string,
-    author: string,
-    publishedYear: number,
-    pages: number,
-    edition: string,
-    uuid: string,
-  ) {
-    this.title = title;
-    this.author = author;
-    this.publishedYear = publishedYear;
-    this.pages = pages;
-    this.edition = edition;
-    this.notes = [];
-    this.uuid = uuid;
-  }
-} // Book Class Definition
-
-export class Note {
-  title: string;
-  content: string;
-  quote: string;
-  chapter: string;
-  page: number;
-  speaker: string;
-  uuid: string;
-  constructor(
-    title: string,
-    content: string,
-    quote: string,
-    chapter: string,
-    page: number,
-    speaker: string,
-    uuid: string,
-  ) {
-    this.title = title;
-    this.content = content;
-    this.quote = quote;
-    this.chapter = chapter;
-    this.page = page;
-    this.speaker = speaker;
-    this.uuid = uuid;
-  }
-} // Book Class Definition
 
 export function AppHeader(){
   return(
@@ -83,35 +34,43 @@ function App() {
   const [page, setPage] = useState<React.ReactElement>(<></>)
   const [token, setToken] = useState<string>(localStorage.getItem("token") || "")
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  
-  let booksfromuser: Book[] = []
 
-  function renderUserLibrary() {
+  async function renderUserLibrary() {
     console.log("App: rendering library...");
     setIsLoading(true)
 
     try {
-      fetch(HOST + "/account", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          token: token
-        })
-      }).then((response) => {
-        response.json().then((data) => {
-          setUser(data.user)
+      const response = await getLibraryCall(token)
+      const data = await response.json()
+      setUser(data.user)
+      
+      let booksFromUser: Book[] = []
+      
+      for (let i = 0; i < data.library.length; i++){
+        booksFromUser.push(data.library[i])
+      }
 
-          for (let i = 0; i < data.library.length; i++){
-            booksfromuser.push(data.library[i])
-          }
+      setLibrary(booksFromUser);
 
-          setLibrary(booksfromuser);
-        })
-      });
     } catch (error) {
       console.log(
         "App: an error occured while getting user library data in renderUserLibrary()",
       );
+
+      Swal.fire({
+        title: "Whoops! We couldn't load your user library! ",
+        text: "You may need to log-in again. Feel free to contact us if the issue persists.",
+        confirmButtonText: "Log Out",
+        denyButtonText: "Stay Logged In",
+        showDenyButton: true,
+        icon: "error"
+      }).then((response) => {
+        if (response.isConfirmed) {
+          setToken("")
+          setPage(authPageComponent)
+        }
+      })
+
       setLibrary([new Book(
         "404", "User Library Not Found, Please log in again.", 0, 0, "", ""
       )])

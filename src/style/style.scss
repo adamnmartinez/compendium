@@ -4,11 +4,15 @@
 }
 
 // Vars
+$light_bg: white;
+$light_bg2: rgb(239, 239, 239);
 $affirmative_color: rgb(144, 239, 144);
 $negative_color: rgb(255, 181, 181);
 $delete_color: rgb(250, 120, 120);
-$dark_mode: false;
-$dark_bg: rgb(38, 38, 38);
+$dark_mode: true;
+$dark_bg: rgb(60, 60, 60);
+$dark_bg2:rgb(47, 47, 47);
+$dark_bg3: rgb(32, 32, 32);
 
 // Scrollbar
 ::-webkit-scrollbar {
@@ -58,11 +62,8 @@ button {
 }
 
 .loadingscreen {
-  // transition: visibility 0.3s linear;
-  // transition: opacity 0.3s linear;
-
   .dimmer {
-    @if $dark_mode == false { background-color: rgb(255, 255, 255); } @else { background-color: $dark_bg; }
+    @if $dark_mode == false { background-color: $light_bg; } @else { background-color: $dark_bg; }
     position: fixed;
     width: 100%;
     height: 100%;
@@ -150,7 +151,7 @@ a {
     font-size: inherit;
     border-style: solid;
     padding: 10px;
-    background-color: rgb(239, 239, 239);
+    background-color: $light_bg2;
 
     &:hover {
       background-color: white;
@@ -592,9 +593,9 @@ a {
       background-color: rgb(255, 255, 255);
       color: black
     } @else { 
-      background-color: $dark_bg; 
+        border-style: none;
+      background-color: $dark_bg2; 
       color: white;
-      border-color: white;
     }
     width: 100%;
     font-size: inherit;
@@ -602,16 +603,26 @@ a {
     padding: 10px;
     border-radius: 5px;
     border-width: 1px;
-    margin-top: 5px;
-    margin-bottom: 5px;
     box-sizing: border-box;
+
+    &.usernameInput {
+      margin-top: 15px;
+      margin-bottom: 5px;
+    }
+
+    &.passwordInput {
+      margin-top: 5px;
+      margin-bottom: 15px
+    }
+
   }
   button {
     @if $dark_mode == false { 
-      background-color: rgb(255, 255, 255);
+      background-color: $light_bg2;
       color: black;
     } @else { 
-      background-color: $dark_bg; 
+      border-style: none;
+      background-color: $dark_bg2; 
       color: white;
       border-color: white;
     }
@@ -623,7 +634,12 @@ a {
     padding: 10px;
     transition: background-color 300ms;
     &:hover {
-      background-color: white;
+      @if $dark_mode == false {
+        background-color: white;
+      } @else {
+        background-color: $dark_bg3;
+      }
+
     }
     &.submitBtn {
       &:hover {
