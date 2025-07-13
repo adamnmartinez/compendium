@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AppHeader } from "../App";
-import { loginCall, registerCall } from "../components/API";
+import { loginCall, registerCall } from "../utilities/API";
 import Swal from "sweetalert2";
 
 export default function AuthPage(props: {

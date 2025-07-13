@@ -1,4 +1,4 @@
-import { Book } from "../components/Interface";
+import { Book } from "../utilities/Interface";
 
 export default function BookList(props: {
   deleteFunc: Function;

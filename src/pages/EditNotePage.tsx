@@ -1,4 +1,4 @@
-import { Book, Note } from "../components/Interface";
+import { Book, Note } from "../utilities/Interface";
 
 export default function EditNotePage(props: {
   note: Note;

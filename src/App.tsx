@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { uploadBookCall, deleteBookCall, modifyBookCall } from "./utilities/API";
 import Swal from "sweetalert2";
 
 // Pages
@@ -11,10 +12,10 @@ import AuthPage from "./pages/AuthPage";
 import Loading from "./components/LoadingOverlay";
 
 // Components
-import { Book, Note } from "./components/Interface";
+import { Book, Note } from "./utilities/Interface";
 
 // API Methods
-import { getLibraryCall } from "./components/API"
+import { getLibraryCall } from "./utilities/API"
 
 export const HOST = 'https://compendium-api-v246.onrender.com'
 
@@ -34,6 +35,12 @@ function App() {
   const [page, setPage] = useState<React.ReactElement>(<></>)
   const [token, setToken] = useState<string>(localStorage.getItem("token") || "")
   const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  function logoutUser() {
+    localStorage.removeItem("token") 
+    setToken("")
+    setPage(authPageComponent)
+  }
 
   async function renderUserLibrary() {
     console.log("App: rendering library...");
@@ -66,13 +73,12 @@ function App() {
         icon: "error"
       }).then((response) => {
         if (response.isConfirmed) {
-          setToken("")
-          setPage(authPageComponent)
+          logoutUser()
         }
       })
 
       setLibrary([new Book(
-        "404", "User Library Not Found, Please log in again.", 0, 0, "", ""
+        "404", "User Library Not Found. Please log out, then log in again.", 0, 0, "", ""
       )])
     } finally {
       setIsLoading(false)
@@ -97,30 +103,71 @@ function App() {
   // Library Functions
   async function addBook(book: Book) {
     try {
-      await fetch(HOST + `/account/library/add`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          token: token,
-          book: book
-        }),
-      });
+      const response = await uploadBookCall(token, book)
+      if (response.status == 200) {
+        Swal.fire({
+          title: 'Book Added',
+          text: 'Want to get started taking notes?',
+          icon: 'success',
+          confirmButtonText: "Let's Go!",
+          denyButtonText: 'Maybe Later...',
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            bookNotesPage(book)
+          }
+        })
+      } else if (response.status == 400) {
+        Swal.fire({
+          title: 'Invalid Token!',
+          text: "Looks like your authentication token expired! Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 403) {
+        Swal.fire({
+          title: 'Unauthenticated!',
+          text: "Looks like you aren't authorized to perform that action, sorry! Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 404) {
+        Swal.fire({
+          title: 'Library Not Found!',
+          text: "Whoops! We couldn't find your library. Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 500) {
+        Swal.fire({
+          title: 'Something went wrong...',
+          text: "Something unexpected caused our servers to fail, please try again later.",
+          icon: 'error',
+          confirmButtonText: "OK"
+        })
+      }
     } catch {
       console.log("App: an error occured in pushBook");
       return false;
     } finally {
-      Swal.fire({
-        title: 'Book Added',
-        text: 'Want to get started taking notes?',
-        icon: 'success',
-        confirmButtonText: "Let's Go!",
-        denyButtonText: 'Maybe Later...',
-        showDenyButton: true
-      }).then((result) => {
-        if (result.isConfirmed) {
-          bookNotesPage(book)
-        }
-      })
       setTimeout(() => renderUserLibrary(), 500);
     }
     return true;
@@ -134,30 +181,71 @@ function App() {
       confirmButtonText: "I changed my mind!",
       denyButtonText: 'Reduce it to atoms!',
       showDenyButton: true
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isDenied) {
         try {
-          fetch(HOST + `/account/library/remove`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              token: token,
-              uuid: book.uuid
+          const response = await deleteBookCall(token, book)
+          if (response.status == 200) {
+            Swal.fire({
+              title: 'Book Deleted!',
+              text: 'Adiós, libro.',
+              icon: 'success',
+              confirmButtonText: "OK",
             })
-          });
+          } else if (response.status == 400) {
+            Swal.fire({
+              title: 'Invalid Token!',
+              text: "Looks like your authentication token expired! Try logging in again.",
+              icon: 'error',
+              confirmButtonText: "Log me out!",
+              denyButtonText: "Keep me logged in.",
+              showDenyButton: true
+            }).then((result) => {
+              if (result.isConfirmed) {
+                logoutUser()
+              }
+            })
+          } else if (response.status == 403) {
+            Swal.fire({
+              title: 'Unauthenticated!',
+              text: "Looks like you aren't authorized to perform that action, sorry! Try logging in again.",
+              icon: 'error',
+              confirmButtonText: "Log me out!",
+              denyButtonText: "Keep me logged in.",
+              showDenyButton: true
+            }).then((result) => {
+              if (result.isConfirmed) {
+                logoutUser()
+              }
+            })
+          } else if (response.status == 404) {
+            Swal.fire({
+              title: 'Library Not Found!',
+              text: "Whoops! We couldn't find your library. Try logging in again.",
+              icon: 'error',
+              confirmButtonText: "Log me out!",
+              denyButtonText: "Keep me logged in.",
+              showDenyButton: true
+            }).then((result) => {
+              if (result.isConfirmed) {
+                logoutUser()
+              }
+            })
+          } else if (response.status == 500) {
+            Swal.fire({
+              title: 'Something went wrong...',
+              text: "Something unexpected caused our servers to fail, please try again later.",
+              icon: 'error',
+              confirmButtonText: "OK"
+            })
+          }
         } catch {
-          console.log("App: an error occured in delBook");
+          console.log("App: an error occured in pushBook");
           return false;
         } finally {
-          Swal.fire({
-            title: 'Book Deleted',
-            text: 'Adiós, libro.',
-            icon: 'success',
-            confirmButtonText: "OK",
-          })
           setTimeout(() => renderUserLibrary(), 500);
+          return true;
         }
-        return true;
       } else {
         return false
       }
@@ -166,28 +254,68 @@ function App() {
 
   async function modifyBook(old: Book, modified: Book) {
     try {
-      fetch(HOST + `/account/library/edit`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          token: token,
-          uuid: old.uuid,
-          modified: modified
-        }),
-      });
-    } catch {
-      console.log("App: an error occured in modifyBook");
-      return false;
-    } finally {
-      Swal.fire({
+      const response = await modifyBookCall(token, old, modified)
+      if (response.status == 200) {
+        Swal.fire({
           title: 'Changes Applied!',
           text: 'You may need to wait a minute or two for changes to be reflected in your library.',
           icon: 'success',
           confirmButtonText: "OK",
       })
+      } else if (response.status == 400) {
+        Swal.fire({
+          title: 'Invalid Token!',
+          text: "Looks like your authentication token expired! Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 403) {
+        Swal.fire({
+          title: 'Unauthenticated!',
+          text: "Looks like you aren't authorized to perform that action, sorry! Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 404) {
+        Swal.fire({
+          title: 'Library Not Found!',
+          text: "Whoops! We couldn't find your library. Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 500) {
+        Swal.fire({
+          title: 'Something went wrong...',
+          text: "Something unexpected caused our servers to fail, please try again later.",
+          icon: 'error',
+          confirmButtonText: "OK"
+        })
+      }
+    } catch {
+      console.log("App: an error occured in modifyBook");
+      return false;
+    } finally {
       setTimeout(() => renderUserLibrary(), 1000);
+      return true;
     }
-    return true;
   }
 
   // Note Functions
@@ -262,9 +390,7 @@ function App() {
       user={user}
       reload={reload}
       logout={() => {
-        localStorage.removeItem("token") 
-        setToken("")
-        setPage(authPageComponent)
+        logoutUser()
       }}
       addBook={addBookPage}
       editBook={editBookPage}
