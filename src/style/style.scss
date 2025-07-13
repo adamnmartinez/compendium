@@ -13,6 +13,8 @@ $dark_mode: false;
 $dark_bg: rgb(60, 60, 60);
 $dark_bg2:rgb(47, 47, 47);
 $dark_bg3: rgb(32, 32, 32);
+$scrollbar_bg: rgb(206, 206, 206);
+$scrollbar_color: rgb(163, 163, 163);
 
 // Scrollbar
 ::-webkit-scrollbar {
@@ -20,11 +22,11 @@ $dark_bg3: rgb(32, 32, 32);
 }
 
 ::-webkit-scrollbar-track {
-  background-color: rgb(206, 206, 206);
+  background-color: $scrollbar_bg;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgb(163, 163, 163);
+  background-color: $scrollbar_color;
   border-radius: 200px;
 }
 
@@ -98,9 +100,7 @@ a {
     } @else { 
       color: white
     }
-    
     transition: color 250ms;
-
     &:hover {
       color: $delete_color;
     }
@@ -118,6 +118,15 @@ a {
     font-family: inherit;
     font-size: inherit;
     text-align: center;
+    
+    @if $dark_mode == false { 
+      background-color: white;
+      color: black
+    } @else { 
+        border-style: none;
+      background-color: $dark_bg2; 
+      color: white;
+    }
   }
 
   ul {
@@ -151,10 +160,23 @@ a {
     font-size: inherit;
     border-style: solid;
     padding: 10px;
-    background-color: $light_bg2;
+    
+    @if $dark_mode == false { 
+      background-color: $light_bg2;
+      color: black
+    } @else { 
+      border-style: none;
+      background-color: $dark_bg2; 
+      color: white;
+    }
 
     &:hover {
-      background-color: white;
+      @if $dark_mode == false {
+        background-color: white;
+      } @else {
+        background-color: $dark_bg3;
+      }
+      
     }
 
     &.bookOperations {
@@ -163,9 +185,11 @@ a {
 
       &.deleteBtn {
         background-color: lighten($delete_color, 20%);
+        @if $dark_mode == true {background-color: darken($delete_color, 45%);}  
 
         &:hover {
           background-color: $delete_color;
+           @if $dark_mode == true {background-color: darken($delete_color, 35%);} 
         }
       }
     }
@@ -185,15 +209,19 @@ a {
 
     &.addBookBtn {
       background-color: lighten($affirmative_color, 20%);
+      @if $dark_mode == true {background-color: darken($affirmative_color, 45%);}
       &:hover {
         background-color: $affirmative_color;
+        @if $dark_mode == true {background-color: darken($affirmative_color, 35%);}
       }
     }
 
     &.logoutBtn {
       background-color: lighten($delete_color, 20%);
+      @if $dark_mode == true {background-color: darken($delete_color, 45%);}  
       &:hover {
         background-color: $delete_color;
+        @if $dark_mode == true {background-color: darken($delete_color, 35%);}  
       }
     }
   }
@@ -644,6 +672,7 @@ a {
     &.submitBtn {
       &:hover {
         background-color: $affirmative_color;
+        @if $dark_mode == true {background-color: darken($affirmative_color, 35%);}
       }
     }
   }
