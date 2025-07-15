@@ -2,18 +2,20 @@ import { useState, useContext } from "react";
 import { AppContext, AppHeader } from "../App";
 import { loginCall, registerCall } from "../utilities/API";
 import Swal from "sweetalert2";
+import LibraryPage from "./LibraryPage";
 
 export default function AuthPage() {
   const [newUser, setNewUser] = useState<boolean>(false);
 
   //@ts-ignore
-  const { setToken, setIsLoading } = useContext(AppContext)
+  const { setToken, setIsLoading, setPage } = useContext(AppContext)
 
   function authenticate(token: string) {
     console.log("AuthPage: User authenticated! Logging them in...");
     console.log("AuthPage: Saving data to local browser storage...")
     localStorage.setItem("token", token)
     setToken(token);
+    setPage(<LibraryPage />)
   }
 
   async function register(username: string, password: string){

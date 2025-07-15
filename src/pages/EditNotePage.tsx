@@ -1,21 +1,87 @@
 import { Book, Note } from "../utilities/Interface";
+import Swal from "sweetalert2";
+import { modifyNoteCall } from "../utilities/API";
+import { AppContext } from "../App";
+import { useContext } from "react";
+import AuthPage from "./AuthPage";
+import BookNotesPage from "./BookNotesPage";
 
 export default function EditNotePage(props: {
   note: Note;
   book: Book;
-  toBookNotes: Function;
-  editFunc: Function;
 }) {
-  async function awaitNoteEdit(newnote: Note) {
-    console.log("EditNotePage: loading...");
-    try {
-      await props.editFunc(props.book, props.note, newnote);
-    } catch {
-      `EditNotePage: An error occured in awaitNoteEdit while modifying note from \"${props.book.title}\"`;
+  //@ts-ignore
+  const { setPage, token, setToken } = useContext(AppContext)
+
+  async function modifyNote(book: Book, note: Note, newNote: Note) {    
+    function logoutUser(){
+      localStorage.removeItem("token") 
+      setToken("")
+      setPage(<AuthPage />)
     }
-    console.log(
-      `EditNotePage: successfully modified note from \"${props.book.title}\"`,
-    );
+
+    try {
+      const response = await modifyNoteCall(token, book, note, newNote)
+      if (response.status == 200) {
+        Swal.fire({
+          title: 'Changes Applied!',
+          icon: 'success',
+          confirmButtonText: "OK",
+        })
+      } else if (response.status == 400) {
+        Swal.fire({
+          title: 'Invalid Token!',
+          text: "Looks like your authentication token expired! Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 403) {
+        Swal.fire({
+          title: 'Unauthenticated!',
+          text: "Looks like you aren't authorized to perform that action, sorry! Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 404) {
+        Swal.fire({
+          title: 'Library Not Found!',
+          text: "Whoops! We couldn't find your library. Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 500) {
+        Swal.fire({
+          title: 'Something went wrong...',
+          text: "Something unexpected caused our servers to fail, please try again later.",
+          icon: 'error',
+          confirmButtonText: "OK"
+        })
+      }
+    } catch {
+      console.log("App: an error occured in modifyNote");
+      return false;
+    } finally {
+      setTimeout(() => setPage(<BookNotesPage book={book} />), 500);
+    }
+    return true;
   }
 
   return (
@@ -44,7 +110,7 @@ export default function EditNotePage(props: {
             event.currentTarget.speaker.value,
             props.note.uuid,
           );
-          awaitNoteEdit(updatedNote);
+          modifyNote(props.book, props.note, updatedNote);
           //props.toBookNotes(props.book);
           //setTimeout(() => props.toBookNotes(props.book), 500);
         }}
@@ -100,7 +166,7 @@ export default function EditNotePage(props: {
           <button
             className="cancelBtn"
             type="button"
-            onClick={() => props.toBookNotes(props.book)}
+            onClick={() => setPage(<BookNotesPage book={props.book} />)}
           >
             Cancel
           </button>

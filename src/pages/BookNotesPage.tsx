@@ -1,25 +1,159 @@
 import { Book, Note } from "../utilities/Interface";
-import { ChangeEvent, useState, useEffect } from "react";
+import { ChangeEvent, useState, useEffect, useContext } from "react";
 import { HOST } from "../App";
 import { v4 as uuid } from "uuid";
 import NoteList from "../components/NoteList";
+import { AppContext } from "../App";
+import AuthPage from "./AuthPage";
+import LibraryPage from "./LibraryPage";
+import Swal from "sweetalert2";
+import { uploadNoteCall, deleteNoteCall } from "../utilities/API";
+import EditNotePage from "./EditNotePage";
 
 export default function BookNotesPage(props: {
   book: Book;
-  //user: string;
-  toLibrary: Function;
-  editNote: Function;
-  deleteNote: Function;
-  renderNotesPage: Function;
-  newNote: Function;
-  token: string;
 }) {
   const [formVis, setFormVis] = useState<Boolean>(false);
   const [noteQuery, setNoteQuery] = useState<string>("");
   const [usernotes, setUsernotes] = useState<Note[]>([]);
 
+  //@ts-ignore
+  const { token, setToken, setPage } = useContext(AppContext)
+    
+  function logoutUser(){
+    localStorage.removeItem("token") 
+    setToken("")
+    setPage(<AuthPage />)
+  }
+
   function formToggle(): void {
     formVis ? setFormVis(false) : setFormVis(true);
+  }
+
+  async function addNote(book: Book, note: Note): Promise<Boolean> {
+    try {
+      const response = await uploadNoteCall(token, book, note)
+      if (response.status == 200) {
+        Swal.fire({
+          title: 'Note Added!',
+          icon: 'success',
+          confirmButtonText: "OK",
+        })
+      } else if (response.status == 400) {
+        Swal.fire({
+          title: 'Invalid Token!',
+          text: "Looks like your authentication token expired! Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 403) {
+        Swal.fire({
+          title: 'Unauthenticated!',
+          text: "Looks like you aren't authorized to perform that action, sorry! Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 404) {
+        Swal.fire({
+          title: 'Library Not Found!',
+          text: "Whoops! We couldn't find your library. Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 500) {
+        Swal.fire({
+          title: 'Something went wrong...',
+          text: "Something unexpected caused our servers to fail, please try again later.",
+          icon: 'error',
+          confirmButtonText: "OK"
+        })
+      }
+    } catch {
+      console.log("App: an error occured in addNote");
+      return false;
+    }
+    return true;
+  }
+
+  async function delNote(book: Book, note: Note) {
+    try {
+      const response = await deleteNoteCall(token, book, note)
+      if (response.status == 200) {
+        Swal.fire({
+          title: 'Note Deleted!',
+          icon: 'success',
+          confirmButtonText: "OK",
+        })
+      } else if (response.status == 400) {
+        Swal.fire({
+          title: 'Invalid Token!',
+          text: "Looks like your authentication token expired! Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 403) {
+        Swal.fire({
+          title: 'Unauthenticated!',
+          text: "Looks like you aren't authorized to perform that action, sorry! Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 404) {
+        Swal.fire({
+          title: 'Library Not Found!',
+          text: "Whoops! We couldn't find your library. Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 500) {
+        Swal.fire({
+          title: 'Something went wrong...',
+          text: "Something unexpected caused our servers to fail, please try again later.",
+          icon: 'error',
+          confirmButtonText: "OK"
+        })
+      }
+    } catch {
+      console.log("App: an error occured in delNote");
+      return false;
+    }
+    return true;
   }
 
   function renderNoteList() {
@@ -29,7 +163,7 @@ export default function BookNotesPage(props: {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          token: props.token
+          token: token
         })
       }).then((response) => response.json()).then((data) => {
         let requestedBook = null
@@ -64,18 +198,7 @@ export default function BookNotesPage(props: {
     }
   }
 
-  async function awaitPull(book: Book, note: Book) {
-    console.log(`BookNotes: pulling note \"${note.title}\"...`);
-    try {
-      await props.deleteNote(book, note);
-    } catch {
-      `BookNotes: an error occured in awaitPull while deleting \"${note.title}\"`;
-    } finally {
-      console.log(
-        `BookNotes: finished pulling note \"${note.title}\" (${note.uuid}), from \"${book.title}\"`,
-      );
-    }
-  }
+
 
   function handleSearch(event: ChangeEvent): void {
     const target = event.currentTarget as HTMLInputElement;
@@ -117,7 +240,7 @@ export default function BookNotesPage(props: {
             event.currentTarget.speaker.value,
             uuid(),
           );
-          props.newNote(props.book, newNote);
+          addNote(props.book, newNote);
           formToggle();
           setTimeout(() => {
             renderNoteList();
@@ -156,14 +279,14 @@ export default function BookNotesPage(props: {
           </button>
         </div>
       </form>
-      <button className="tolibrary" onClick={() => props.toLibrary()}>
+      <button className="tolibrary" onClick={() => setPage(<LibraryPage />)}>
         Back to My Compendium
       </button>
       <hr />
       <input placeholder={"Search for notes"} onChange={handleSearch}></input>
       <NoteList
-        deleteNote={awaitPull}
-        editNote={props.editNote}
+        deleteNote={delNote}
+        editNote={(note: Note, book: Book) => setPage(<EditNotePage book={book} note={note}/>)}
         renderNoteList={renderNoteList}
         query={noteQuery}
         book={props.book}

@@ -1,26 +1,89 @@
-import { AppHeader } from "../App";
+import { AppHeader, AppContext } from "../App";
 import { Book } from "../utilities/Interface";
+import Swal from "sweetalert2";
+import { modifyBookCall } from "../utilities/API";
+import { useContext } from "react";
+import LibraryPage from "./LibraryPage";
+import AuthPage from "./AuthPage";
 
 export default function EditBookPage(props: {
   book: Book;
-  toLibrary: Function;
-  editFunc: Function;
-  setLoading: Function;
 }) {
-  async function awaitEdit(oldBook: Book, newBook: Book) {
-    props.setLoading(true)
-    console.log(`EditBookPage: modifying book \"${oldBook.title}\"`);
-    try {
-      await props.editFunc(oldBook, newBook);
-    } catch {
-      `EditBookPage: An error occured in awaitPush while modifying ${oldBook.title}`;
-    } finally {
-      props.setLoading(false)
-    }
-    console.log(
-      `EditBookPage: successfully modified \"${oldBook.title}\" to \"${newBook.title}\"`,
-    );
+  //@ts-ignore
+  const { token, setToken, setPage } = useContext(AppContext)
+
+  function logoutUser(){
+    localStorage.removeItem("token") 
+    setToken("")
+    setPage(<AuthPage />)
   }
+
+  async function modifyBook(old: Book, modified: Book) {
+    try {
+      const response = await modifyBookCall(token, old, modified)
+      if (response.status == 200) {
+        Swal.fire({
+          title: 'Changes Applied!',
+          text: 'You may need to wait a minute or two for changes to be reflected in your library.',
+          icon: 'success',
+          confirmButtonText: "OK",
+      })
+      } else if (response.status == 400) {
+        Swal.fire({
+          title: 'Invalid Token!',
+          text: "Looks like your authentication token expired! Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 403) {
+        Swal.fire({
+          title: 'Unauthenticated!',
+          text: "Looks like you aren't authorized to perform that action, sorry! Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 404) {
+        Swal.fire({
+          title: 'Library Not Found!',
+          text: "Whoops! We couldn't find your library. Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 500) {
+        Swal.fire({
+          title: 'Something went wrong...',
+          text: "Something unexpected caused our servers to fail, please try again later.",
+          icon: 'error',
+          confirmButtonText: "OK"
+        })
+      }
+    } catch {
+      console.log("App: an error occured in modifyBook");
+      return false;
+    } finally {
+      setTimeout(() => setPage(<LibraryPage />), 1000);
+      return true;
+    }
+  }
+
 
   return (
     <div className="editBookPage">
@@ -38,8 +101,8 @@ export default function EditBookPage(props: {
             props.book.uuid,
           );
           updatedEntry.notes = props.book.notes;
-          awaitEdit(props.book, updatedEntry);
-          props.toLibrary();
+          modifyBook(props.book, updatedEntry);
+          setPage(<LibraryPage />);
         }}
       >
         <p>Title *</p>
@@ -87,7 +150,7 @@ export default function EditBookPage(props: {
           <button className="submitBtn" type="submit">
             Save Changes
           </button>
-          <button className="cancelBtn" onClick={() => props.toLibrary()}>
+          <button className="cancelBtn" onClick={() => setPage(<LibraryPage />)}>
             Cancel
           </button>
         </div>

@@ -1,6 +1,4 @@
-import { Book } from "../App";
-import { Note } from "../App";
-
+import { Book, Note } from "../utilities/Interface";
 export default function NoteList(props: {
   deleteNote: Function;
   editNote: Function;

@@ -1,49 +1,172 @@
 import BookList from "../components/BookList";
-import { AppHeader } from "../App";
+import { AppHeader, AppContext } from "../App";
 import { Book } from "../utilities/Interface";
-import { ChangeEvent, useState } from "react";
+import AuthPage from "./AuthPage";
+import { ChangeEvent, useState, useContext, useEffect } from "react";
+import Swal from "sweetalert2";
+import { getLibraryCall, deleteBookCall } from "../utilities/API";
+import AddBookPage from "./AddBookPage";
+import EditBookPage from "./EditBookPage";
+import BookNotesPage from "./BookNotesPage";
 
-export default function LibraryPage(props: {
-  pullFunc: Function;
-  lib: Book[];
-  user: string;
-  reload: Function;
-  logout: Function;
-  addBook: Function;
-  editBook: Function;
-  bookNotes: Function;
-}) {
+export default function LibraryPage() {
   const [libQuery, setLibQuery] = useState<string>("");
+
+  //@ts-ignore
+  const { setIsLoading, token, user, setUser, library, setLibrary, setToken, page, setPage } = useContext(AppContext)
+  
+  function logoutUser(){
+    localStorage.removeItem("token") 
+    setToken("")
+    setPage(<AuthPage />)
+  }
+
+  async function delBook(book: Book) {
+    Swal.fire({
+      title: 'Delete Book?',
+      text: 'This entry, and all its notes, will be deleted. Are you sure you want to proceed?',
+      icon: 'question',
+      confirmButtonText: "I changed my mind!",
+      denyButtonText: 'Reduce it to atoms!',
+      showDenyButton: true
+    }).then(async (result) => {
+      if (result.isDenied) {
+        try {
+          const response = await deleteBookCall(token, book)
+          if (response.status == 200) {
+            Swal.fire({
+              title: 'Book Deleted!',
+              text: 'Adiós, libro.',
+              icon: 'success',
+              confirmButtonText: "OK",
+            })
+          } else if (response.status == 400) {
+            Swal.fire({
+              title: 'Invalid Token!',
+              text: "Looks like your authentication token expired! Try logging in again.",
+              icon: 'error',
+              confirmButtonText: "Log me out!",
+              denyButtonText: "Keep me logged in.",
+              showDenyButton: true
+            }).then((result) => {
+              if (result.isConfirmed) {
+                logoutUser()
+              }
+            })
+          } else if (response.status == 403) {
+            Swal.fire({
+              title: 'Unauthenticated!',
+              text: "Looks like you aren't authorized to perform that action, sorry! Try logging in again.",
+              icon: 'error',
+              confirmButtonText: "Log me out!",
+              denyButtonText: "Keep me logged in.",
+              showDenyButton: true
+            }).then((result) => {
+              if (result.isConfirmed) {
+                logoutUser()
+              }
+            })
+          } else if (response.status == 404) {
+            Swal.fire({
+              title: 'Library Not Found!',
+              text: "Whoops! We couldn't find your library. Try logging in again.",
+              icon: 'error',
+              confirmButtonText: "Log me out!",
+              denyButtonText: "Keep me logged in.",
+              showDenyButton: true
+            }).then((result) => {
+              if (result.isConfirmed) {
+                logoutUser()
+              }
+            })
+          } else if (response.status == 500) {
+            Swal.fire({
+              title: 'Something went wrong...',
+              text: "Something unexpected caused our servers to fail, please try again later.",
+              icon: 'error',
+              confirmButtonText: "OK"
+            })
+          }
+        } catch {
+          console.log("App: an error occured in pushBook");
+          return false;
+        } finally {
+          renderUserLibrary()
+          return true;
+        }
+      } else {
+        return false
+      }
+    })
+  }
+
+  async function renderUserLibrary() {
+    console.log("App: rendering library...");
+    setIsLoading(true)
+
+    try {
+      const response = await getLibraryCall(token)
+      const data = await response.json()
+      setUser(data.user)
+      
+      let booksFromUser: Book[] = []
+      
+      for (let i = 0; i < data.library.length; i++){
+        booksFromUser.push(data.library[i])
+      }
+
+      setLibrary(booksFromUser);
+
+    } catch (error) {
+      console.log(
+        "App: an error occured while getting user library data in renderUserLibrary()",
+      );
+
+      Swal.fire({
+        title: "Whoops! We couldn't load your user library! ",
+        text: "You may need to log-in again. Feel free to contact us if the issue persists.",
+        confirmButtonText: "Log Out",
+        denyButtonText: "Stay Logged In",
+        showDenyButton: true,
+        icon: "error"
+      }).then((response) => {
+        if (response.isConfirmed) {
+          logoutUser()
+        }
+      })
+
+      setLibrary([new Book(
+        "404", "User Library Not Found. Please log out, then log in again.", 0, 0, "", ""
+      )])
+    } finally {
+      setIsLoading(false)
+    }
+  };
+
+  useEffect(() => {
+    setTimeout(() => renderUserLibrary(), 1000)
+  }, [token]);
+
 
   function handleSearch(event: ChangeEvent): void {
     const target = event.currentTarget as HTMLInputElement;
     setLibQuery(target.value);
   }
 
-  async function awaitPull(book: Book) {
-    console.log(`LibraryPage: pulling \"${book.title}\"...`);
-    try {
-      await props.pullFunc(book);
-    } catch {
-      `LibraryPage: An error occured in awaitPull while pulling \"${book.title}\"`;
-    }
-    console.log(`LibraryPage: finished pulling \"${book.title}\"`);
-  }
-
   return (
     <div className="libraryPage">
       <AppHeader></AppHeader>
       <p>
-        Welcome, <b>{props.user}</b>
+        Welcome, <b>{user}</b>
       </p>
       <hr />
-      <button className="addBookBtn" onClick={() => props.addBook()}>
+      <button className="addBookBtn" onClick={() => setPage(<AddBookPage />)}>
         New Entry +
       </button>
-      <button className="reloadBtn" onClick={() => props.reload()}>
+      <button className="reloadBtn" onClick={renderUserLibrary}>
         Reload Library
       </button>
-      <button className="logoutBtn" onClick={() => props.logout()}>
+      <button className="logoutBtn" onClick={() => logoutUser()}>
         Log Out
       </button>
       <input
@@ -53,10 +176,10 @@ export default function LibraryPage(props: {
       ></input>
       <hr />
       <BookList
-        deleteFunc={awaitPull}
-        editFunc={props.editBook}
-        notesFunc={props.bookNotes}
-        list={props.lib}
+        deleteFunc={delBook}
+        editFunc={(book: Book) => setPage(<EditBookPage book={book}/>)}
+        notesFunc={(book: Book) => setPage(<BookNotesPage book={book} />)}
+        list={library}
         query={libQuery}
       />
     </div>

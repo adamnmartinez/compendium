@@ -1,25 +1,96 @@
-import { ChangeEvent, useState } from "react";
-import { AppHeader } from "../App";
+import { ChangeEvent, useState, useContext } from "react";
+import { AppContext, AppHeader } from "../App";
 import { Book } from "../utilities/Interface";
 import { v4 as uuid } from "uuid";
+import Swal from "sweetalert2";
+import LibraryPage from "./LibraryPage";
+import AuthPage from "./AuthPage";
+import { uploadBookCall } from "../utilities/API";
+import BookNotesPage from "./BookNotesPage";
 
-export default function AddBookPage(props: {
-  pushFunc: Function;
-  toLibrary: Function;
-}) {
+export default function AddBookPage() {
   const [searchResults, setSearchResults] = useState<React.ReactElement[]>([]);
 
-  async function awaitPush(newBook: Book) {
-    console.log(`AddBookPage: adding \"${newBook.title}\"...`);
+  //@ts-ignore
+  const { setPage, token, setToken } = useContext(AppContext)
+
+  function logoutUser(){
+    localStorage.removeItem("token") 
+    setToken("")
+    setPage(<AuthPage />)
+  }
+
+  async function addBook(book: Book) {
     try {
-      await props.pushFunc(newBook);
+      const response = await uploadBookCall(token, book)
+      if (response.status == 200) {
+        Swal.fire({
+          title: 'Book Added',
+          text: 'Want to get started taking notes?',
+          icon: 'success',
+          confirmButtonText: "Let's Go!",
+          denyButtonText: 'Maybe Later...',
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            setPage(<BookNotesPage book={book}/>)
+          }
+        })
+      } else if (response.status == 400) {
+        Swal.fire({
+          title: 'Invalid Token!',
+          text: "Looks like your authentication token expired! Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 403) {
+        Swal.fire({
+          title: 'Unauthenticated!',
+          text: "Looks like you aren't authorized to perform that action, sorry! Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 404) {
+        Swal.fire({
+          title: 'Library Not Found!',
+          text: "Whoops! We couldn't find your library. Try logging in again.",
+          icon: 'error',
+          confirmButtonText: "Log me out!",
+          denyButtonText: "Keep me logged in.",
+          showDenyButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            logoutUser()
+          }
+        })
+      } else if (response.status == 500) {
+        Swal.fire({
+          title: 'Something went wrong...',
+          text: "Something unexpected caused our servers to fail, please try again later.",
+          icon: 'error',
+          confirmButtonText: "OK"
+        })
+      }
     } catch {
-      `AddBookPage: an error occured in awaitPush while pushing \"${newBook.title}\"`;
+      console.log("App: an error occured in pushBook");
+      return false;
     } finally {
-      console.log(
-        `AddBookPage: finished pushing \"${newBook.title}\" (${newBook.uuid})`,
-      );
+      // setTimeout(() => setPage(<LibraryPage />), 500);
+      setPage(<LibraryPage />)
     }
+    return true;
   }
 
   async function searchAPI(event: ChangeEvent) {
@@ -63,8 +134,8 @@ export default function AddBookPage(props: {
                 "",
                 uuid(),
               );
-              awaitPush(newBook);
-              props.toLibrary();
+              addBook(newBook);
+              setPage(<LibraryPage />);
             }}
           >
             Save to My Compendium
@@ -81,7 +152,7 @@ export default function AddBookPage(props: {
       <br />
       Add an entry manually or by searching.
       <hr />
-      <button className="cancelBtn" onClick={() => props.toLibrary()}>
+      <button className="cancelBtn" onClick={() => setPage(<LibraryPage />)}>
         {" "}
         Back to My Compendium{" "}
       </button>
@@ -107,8 +178,8 @@ export default function AddBookPage(props: {
             event.currentTarget.edition.value,
             uuid(),
           );
-          awaitPush(newBook);
-          props.toLibrary();
+          addBook(newBook);
+          setPage(<LibraryPage />);
         }}
       >
         <p>Title *</p>
