@@ -1,19 +1,19 @@
-import { useState } from "react";
-import { AppHeader } from "../App";
+import { useState, useContext } from "react";
+import { AppContext, AppHeader } from "../App";
 import { loginCall, registerCall } from "../utilities/API";
 import Swal from "sweetalert2";
 
-export default function AuthPage(props: {
-  setToken: Function;
-  setLoading: Function;
-}) {
+export default function AuthPage() {
   const [newUser, setNewUser] = useState<boolean>(false);
+
+  //@ts-ignore
+  const { setToken, setIsLoading } = useContext(AppContext)
 
   function authenticate(token: string) {
     console.log("AuthPage: User authenticated! Logging them in...");
     console.log("AuthPage: Saving data to local browser storage...")
     localStorage.setItem("token", token)
-    props.setToken(token);
+    setToken(token);
   }
 
   async function register(username: string, password: string){
@@ -21,7 +21,7 @@ export default function AuthPage(props: {
       Use the LoginCall API method to perform attempt a log-in
     */
 
-    props.setLoading(true)
+    setIsLoading(true)
 
     try {
       const response = await registerCall(username, password, 10000)
@@ -45,7 +45,7 @@ export default function AuthPage(props: {
         // Request Timeout
         Swal.fire({
           title: 'Request Timed Out!',
-          text: 'Looks like our servers fell asleep, try again in about 10 minutes!',
+          text: "Looks like our servers fell asleep! We'll them up now, try again in a few minutes!",
           icon: 'error',
           confirmButtonText: 'OK'
         })
@@ -84,7 +84,7 @@ export default function AuthPage(props: {
         confirmButtonText: 'OK'
       })
     } finally {
-      props.setLoading(false)
+      setIsLoading(false)
     }
   }
 
@@ -93,7 +93,7 @@ export default function AuthPage(props: {
       Use the LoginCall API method to perform attempt a log-in
     */
 
-    props.setLoading(true)
+    setIsLoading(true)
 
     try {
       const response = await loginCall(username, password, 10000)
@@ -116,7 +116,7 @@ export default function AuthPage(props: {
         // Request Timeout
         Swal.fire({
           title: 'Request Timed Out!',
-          text: 'Looks like our servers fell asleep, try again in about 10 minutes!.',
+          text: 'Looks like our servers fell asleep, try again in about 10 minutes!',
           icon: 'error',
           confirmButtonText: 'OK'
         })
@@ -147,7 +147,7 @@ export default function AuthPage(props: {
         confirmButtonText: 'OK'
       })
     } finally {
-      props.setLoading(false)
+      setIsLoading(false)
     }
   }
 

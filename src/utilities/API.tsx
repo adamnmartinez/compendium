@@ -1,6 +1,6 @@
 import { HOST } from "../App";
 import { timedFetch } from "./timedFetch";
-import { Book } from "./Interface";
+import { Book, Note } from "./Interface";
 
 const loginCall = async (username: string, password: string, timeout: number = 10000): Promise<Response> => {
     /*
@@ -214,6 +214,117 @@ const modifyBookCall = async (token: string, old: Book, modified: Book, timeout:
     }
 }
 
+const uploadNoteCall = async (token: string, book: Book, note: Note, timeout: number = 10000): Promise<Response> => {
+    /*
+        Upload Note API Call, 
+        Input: Token string, a Book, and a Note
+        Output: Promise<Response>
+
+        Default timeout after 10 seconds.
+    */ 
+    try {
+        const response = timedFetch(HOST + `/account/library/entry/add`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            token: token,
+            bookID: book.uuid,
+            note: note
+          }),
+        }, timeout)
+
+        return response
+
+    } catch (e) {
+        return new Response(
+          JSON.stringify({
+            error: "Internal Error",
+            data: {
+              message: e
+            }
+          }), {
+            status: 500,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        )
+    }
+}
+
+const deleteNoteCall = async (token: string, book: Book, note: Note, timeout: number = 10000): Promise<Response> => {
+    /*
+        Register API Call, 
+        Input: Username and Password Strings
+        Output: Promise<Response>
+
+        Default timeout after 10 seconds.
+    */ 
+    try {
+      const response = timedFetch(HOST + `/account/library/entry/remove`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token: token,
+          bookID: book.uuid,
+          noteID: note.uuid
+        })
+      }, timeout)
+      return response
+    } catch (e) {
+        return new Response(
+          JSON.stringify({
+            error: "Internal Error",
+            data: {
+              message: e
+            }
+          }), {
+            status: 500,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        )
+    }
+}
+
+const modifyNoteCall = async (token: string, book: Book, note: Note, newNote: Note, timeout: number = 10000): Promise<Response> => {
+    /*
+        Modify Note API Call, 
+        Input: A Token string, a Book, a Note, and a "modified" Note that will replace the old one.
+        Output: Promise<Response>
+
+        Default timeout after 10 seconds.
+    */ 
+    try {
+      const response = timedFetch(HOST + `/account/library/entry/edit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token: token,
+          bookID: book.uuid,
+          noteID: note.uuid,
+          modified: newNote
+        }),
+      }, timeout)
+      return response
+    } catch (e) {
+        return new Response(
+          JSON.stringify({
+            error: "Internal Error",
+            data: {
+              message: e
+            }
+          }), {
+            status: 500,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        )
+    }
+}
 
 
-export { loginCall, registerCall, getLibraryCall, uploadBookCall, deleteBookCall, modifyBookCall }
+
+export { loginCall, registerCall, getLibraryCall, uploadBookCall, deleteBookCall, modifyBookCall, uploadNoteCall, deleteNoteCall, modifyNoteCall }
