@@ -114,7 +114,7 @@ export default function AuthPage() {
         // Request Timeout
         Swal.fire({
           title: 'Request Timed Out!',
-          text: 'Looks like our servers fell asleep, try again in about 10 minutes!',
+          text: 'Looks like our servers fell asleep, try again in a few minutes!',
           icon: 'error',
           confirmButtonText: 'OK'
         })

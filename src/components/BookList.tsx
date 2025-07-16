@@ -10,6 +10,7 @@ export default function BookList(props: {
   const listElements: React.ReactElement[] = [];
 
   const noResults = <li className="noresults">No Results</li>;
+  console.log(props.list)
 
   for (let i = 0; i < props.list.length; i++) {
     let book = props.list[i]
