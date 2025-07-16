@@ -32,7 +32,6 @@ export default function AuthPage() {
       if (response.status == 201){
         // Success
         login(username, password)
-        authenticate(data.token)
         return
       } else if (response.status == 429){
         // Rate-Limit

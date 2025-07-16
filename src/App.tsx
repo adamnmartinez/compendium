@@ -8,7 +8,7 @@ import Loading from "./components/LoadingOverlay";
 // Components
 import { Book } from "./utilities/Interface";
 
-export const HOST = 'https://compendium-api-v246.onrender.com'
+export const HOST = import.meta.env.VITE_HOST
 
 export function AppHeader(){
   return(
@@ -43,7 +43,7 @@ function App() {
 
   useEffect(() => {
     (token != "") ? setPage(<LibraryPage />) : setPage(<AuthPage />);
-  }, [library]);
+  }, [token]);
 
   return (
     //@ts-ignore

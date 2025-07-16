@@ -11,7 +11,9 @@ export default function BookList(props: {
 
   const noResults = <li className="noresults">No Results</li>;
 
-  props.list.forEach((book) => {
+  for (let i = 0; i < props.list.length; i++) {
+    let book = props.list[i]
+
     if (
       book.title.toLowerCase().includes(props.query.toLowerCase()) ||
       book.author.toLowerCase().includes(props.query.toLowerCase()) ||
@@ -54,7 +56,7 @@ export default function BookList(props: {
         </li>,
       );
     }
-  });
+  }
 
   return (
     <ul className="bookList">

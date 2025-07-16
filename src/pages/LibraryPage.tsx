@@ -110,6 +110,7 @@ export default function LibraryPage() {
       setUser(data.user)
       
       let booksFromUser: Book[] = []
+
       
       for (let i = 0; i < data.library.length; i++){
         booksFromUser.push(data.library[i])
