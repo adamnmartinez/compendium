@@ -28,7 +28,6 @@ export default function AuthPage() {
     try {
       const response = await registerCall(username, password, 10000)
       const data = await response.json()
-      console.log(`${response.status} ${data.message}`)
 
       if (response.status == 201){
         // Success
@@ -54,7 +53,7 @@ export default function AuthPage() {
       } else if (response.status == 400){
         // Bad Request
         Swal.fire({
-          title: "Bad Request!",
+          title: "Bad Credentials!",
           text: data.message,
           icon: 'error',
           confirmButtonText: 'OK'
@@ -78,7 +77,6 @@ export default function AuthPage() {
         return
       }
     } catch (e) {
-      console.log(e)
       Swal.fire({
         title: "Unexpected Error!",
         text: 'Something went wrong, unexpectedly! Please try again later. If the issue persists, feel free to contact us!',
@@ -100,7 +98,6 @@ export default function AuthPage() {
     try {
       const response = await loginCall(username, password, 10000)
       const data = await response.json()
-      console.log(`${response.status} ${data.message}`)
 
       if (response.status == 200){
         // Success
@@ -122,7 +119,7 @@ export default function AuthPage() {
           icon: 'error',
           confirmButtonText: 'OK'
         })
-      } else if (response.status == 401){
+      } else if (response.status == 401 || response.status == 400){
         // Bad Creds
         Swal.fire({
           title: "Login Failed!",
@@ -141,7 +138,6 @@ export default function AuthPage() {
         return
       }
     } catch (e) {
-      console.log(e)
       Swal.fire({
         title: "Unexpected Error!",
         text: 'Something went wrong, unexpectedly! Please try again later. If the issue persists, feel free to contact us!',
