@@ -1,5 +1,4 @@
-import { Book } from "./App";
-import { Note } from "./App";
+import { Book, Note } from "./utilities/Interface";
 export default class Storage {
   hasLocalStorage(): boolean {
     return window.localStorage.library ? true : false;
