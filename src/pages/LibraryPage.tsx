@@ -101,7 +101,7 @@ export default function LibraryPage() {
   }
 
   async function renderUserLibrary() {
-    console.log("App: rendering library...");
+    console.log("Library: render initatied")
     setIsLoading(true)
 
     try {
@@ -120,7 +120,7 @@ export default function LibraryPage() {
 
     } catch (error) {
       console.log(
-        "App: an error occured while getting user library data in renderUserLibrary()",
+        "Library: an error occured while getting user library data in render",
       );
 
       Swal.fire({
@@ -141,12 +141,14 @@ export default function LibraryPage() {
       )])
     } finally {
       setIsLoading(false)
+      console.log("Library: render completed without errors")
     }
   };
 
   useEffect(() => {
-    setTimeout(() => renderUserLibrary(), 1000)
-  }, [token]);
+    console.log("Library: page mounted, triggering user library render...");
+    renderUserLibrary();
+  }, []);
 
 
   function handleSearch(event: ChangeEvent): void {

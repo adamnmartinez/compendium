@@ -75,11 +75,13 @@ export default function EditBookPage(props: {
           confirmButtonText: "OK"
         })
       }
+      console.log("EditBook: Done!")
+      
     } catch {
       console.log("App: an error occured in modifyBook");
       return false;
     } finally {
-      setTimeout(() => setPage(<LibraryPage />), 1000);
+      setPage(<LibraryPage />);
       return true;
     }
   }
@@ -102,7 +104,6 @@ export default function EditBookPage(props: {
           );
           updatedEntry.notes = props.book.notes;
           modifyBook(props.book, updatedEntry);
-          setPage(<LibraryPage />);
         }}
       >
         <p>Title *</p>

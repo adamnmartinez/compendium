@@ -83,11 +83,13 @@ export default function AddBookPage() {
           confirmButtonText: "OK"
         })
       }
+      
+      console.log("AddBook: Done!")
+
     } catch {
       console.log("App: an error occured in pushBook");
       return false;
     } finally {
-      // setTimeout(() => setPage(<LibraryPage />), 500);
       setPage(<LibraryPage />)
     }
     return true;
@@ -109,6 +111,7 @@ export default function AddBookPage() {
 
     dataJSON.items.forEach((item: any) => {
       let authorString: string = item.volumeInfo.authors[0];
+      // const publisher = item.volumeInfo.publisher; (Required for citation feature)
       const itemYear = item.volumeInfo.publishedDate.slice(0, 4);
       const pages =
         item.volumeInfo.pageCount !== 0 ? item.volumeInfo.pageCount : null;
@@ -135,7 +138,6 @@ export default function AddBookPage() {
                 uuid(),
               );
               addBook(newBook);
-              setPage(<LibraryPage />);
             }}
           >
             Save to My Compendium

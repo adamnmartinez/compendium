@@ -225,6 +225,9 @@ export default function BookNotesPage(props: {
       </div>
       <br />
       <button className="revealForm" onClick={formToggle}>
+        Cite This Source
+      </button>
+      <button className="revealForm" onClick={formToggle}>
         Make a Note +
       </button>
       <form
