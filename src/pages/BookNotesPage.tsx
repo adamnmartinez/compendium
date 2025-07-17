@@ -14,6 +14,9 @@ export default function BookNotesPage(props: {
   book: Book;
 }) {
   const [formVis, setFormVis] = useState<Boolean>(false);
+  const [citeVis, setCiteVis] = useState<Boolean>(false);
+  const [style, setStyle] = useState<string>("")
+  const [citation, setCitation] = useState<string>("");
   const [noteQuery, setNoteQuery] = useState<string>("");
   const [usernotes, setUsernotes] = useState<Note[]>([]);
 
@@ -28,6 +31,12 @@ export default function BookNotesPage(props: {
 
   function formToggle(): void {
     formVis ? setFormVis(false) : setFormVis(true);
+    setCiteVis(false)
+  }
+
+  function citeToggle(): void {
+    citeVis ? setCiteVis(false) : setCiteVis(true)
+    setFormVis(false)
   }
 
   async function addNote(book: Book, note: Note): Promise<Boolean> {
@@ -198,11 +207,24 @@ export default function BookNotesPage(props: {
     }
   }
 
-
-
   function handleSearch(event: ChangeEvent): void {
     const target = event.currentTarget as HTMLInputElement;
     setNoteQuery(target.value);
+  }
+
+  function handleStyleSelect(event: ChangeEvent): void {
+    const target = event.currentTarget as HTMLInputElement;
+    setStyle(target.value)
+  }
+
+  function generateCitation(): void {
+    if (style == "None") {
+      setCitation("")
+      return
+    }
+    
+    // setCitation(style + " Citation Here")
+    setCitation("Thanks for showing interest in this feature! It's not done yet, but it will be soon, thanks for your patience!")
   }
 
   useEffect(() => {
@@ -224,13 +246,33 @@ export default function BookNotesPage(props: {
         {props.book.edition ? <br /> : ""}
       </div>
       <br />
-      <button className="revealForm" onClick={formToggle}>
+      <button className={citeVis ? "revealForm revealed" : "revealForm"} onClick={citeToggle}>
         Cite This Source
       </button>
-      <button className="revealForm" onClick={formToggle}>
+      <form
+        className="citationForm"
+        style={citeVis ? { display: "block" } : { display: "none" }}
+        onSubmit={(event) => { event.preventDefault(); }}
+      >
+        Select citations style: <br/>
+        <select onChange={handleStyleSelect}>
+          <option value={"None"}> Select a Style</option>
+          <option value={"MLA"}> MLA </option>
+          <option value={"Chicago"}> Chicago </option>
+          <option value={"APA"}> APA </option>
+        </select>
+        <br />
+        <button className="generateBtn" onClick={generateCitation}>Generate</button>
+        <div className="citation" hidden={citation == ""}>
+          {citation}
+        </div>
+        <button onClick={() => setCiteVis(false)}>Close</button>
+      </form>
+      <button className={formVis ? "revealForm revealed" : "revealForm"}  onClick={formToggle}>
         Make a Note +
       </button>
       <form
+        className="noteForm"
         style={formVis ? { display: "block" } : { display: "none" }}
         onSubmit={(event) => {
           event.preventDefault();

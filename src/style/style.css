@@ -320,6 +320,9 @@ a:hover {
 .bookNotesPage button.revealForm:hover {
   background-color: white;
 }
+.bookNotesPage button.revealForm.revealed {
+  background-color: rgb(197, 197, 197);
+}
 .bookNotesPage .bookInfo {
   font-size: 1.2rem;
 }
@@ -417,6 +420,34 @@ a:hover {
 }
 .bookNotesPage .notebuttons {
   margin-top: 10px;
+}
+.bookNotesPage .citationForm select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.bookNotesPage .citationForm button {
+  width: 100%;
+  margin-bottom: 10px;
+  border-width: 1px;
+  border-radius: 5px;
+}
+.bookNotesPage .citationForm button:hover {
+  background-color: white;
+}
+.bookNotesPage .citationForm button.generateBtn {
+  background-color: #bdf5bd;
+}
+.bookNotesPage .citationForm button.generateBtn:hover {
+  background-color: rgb(144, 239, 144);
+}
+.bookNotesPage .citationForm .citation {
+  margin-bottom: 10px;
+  border-style: solid;
+  border-width: 1px;
+  padding: 15px;
+  border-radius: 5px;
+  background-color: #e6e6e6;
 }
 
 .noteEditPage form p {

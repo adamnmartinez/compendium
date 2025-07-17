@@ -401,6 +401,12 @@ a {
     &:hover {
       background-color: white;
     }
+    &.revealed {
+      background-color: rgb(197, 197, 197);
+    }
+
+    
+
   }
 
   .bookInfo {
@@ -511,6 +517,44 @@ a {
   .notebuttons {
     margin-top: 10px;
   }
+
+  .citationForm {
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      width: 100%;
+      margin-bottom: 10px;
+      &:hover {
+        background-color: white;
+      }
+
+      &.generateBtn {
+        background-color: lighten($affirmative_color, 10%);
+        &:hover {
+          background-color: $affirmative_color;
+        }
+      }
+
+      border-width: 1px;
+      border-radius: 5px;
+      
+      
+    }
+
+    .citation {
+      margin-bottom: 10px;
+      border-style: solid;
+      border-width: 1px;
+      padding: 15px;
+      border-radius: 5px;
+      background-color: darken(white, 10%);
+    }
+  }
+
 }
 
 .noteEditPage {
