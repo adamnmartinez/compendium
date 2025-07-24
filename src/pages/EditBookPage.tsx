@@ -99,8 +99,12 @@ export default function EditBookPage(props: {
             event.currentTarget.author.value,
             event.currentTarget.year.value,
             event.currentTarget.pages.value,
-            event.currentTarget.edition.value,
             props.book.uuid,
+            event.currentTarget.edition.value,
+            event.currentTarget.publisher.value,
+            event.currentTarget.container.value,
+            event.currentTarget.volume.value,
+            event.currentTarget.number.value,
           );
           updatedEntry.notes = props.book.notes;
           modifyBook(props.book, updatedEntry);
@@ -139,14 +143,34 @@ export default function EditBookPage(props: {
           defaultValue={props.book.pages}
         ></input>
         <br />
-        <p>Edition Number/Title</p>
+        <p>Edition / Version</p>
         <input
           name="edition"
           type="text"
-          placeholder="Edition Name/Number"
           defaultValue={props.book.edition}
         ></input>
         <br />
+        
+        <div className="dualinputflex">
+          <div className="left">
+            <p>Publisher</p>
+            <input name="publisher" defaultValue={props.book.publisher} type="text"></input>
+          </div>
+          <div className="right">
+            <p>Container</p>
+            <input name="container" defaultValue={props.book.container} type="text"></input>
+          </div>
+        </div>
+        <div className="dualinputflex">
+          <div className="left">
+            <p>Volume</p>
+            <input name="volume" defaultValue={props.book.volume > 0 ? props.book.volume : ""} type="number"></input>
+          </div>
+          <div className="right">
+            <p>No.</p>
+            <input name="number" defaultValue={props.book.number > 0 ? props.book.number : ""} type="number"></input>
+          </div>
+        </div>
         <div className="flexbuttons">
           <button className="submitBtn" type="submit">
             Save Changes

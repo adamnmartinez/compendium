@@ -132,6 +132,7 @@ a {
   ul {
     list-style: none;
     padding-left: 0;
+
     &.bookList {
       li {
         padding: 10px;
@@ -341,13 +342,13 @@ a {
       }
     }
   }
-  .yearpageflex {
+  .dualinputflex {
     display: flex;
-    .year {
+    .left {
       margin-right: 10px;
     }
-    .year,
-    .page {
+    .left,
+    .right {
       flex: 1;
     }
   }
@@ -368,6 +369,14 @@ a {
 }
 
 .bookNotesPage {
+  .additionalData {
+    margin-top: 5px;
+    .infoHeader {
+      
+      font-size: 14px;
+    }
+  }
+
   input,
   textarea {
     width: 100%;

@@ -107,6 +107,8 @@ export default function AddBookPage() {
     );
     const dataJSON = await response.json();
 
+    console.log(dataJSON)
+
     setSearchResults([]);
 
     dataJSON.items.forEach((item: any) => {
@@ -127,6 +129,7 @@ export default function AddBookPage() {
           </p>
           {authorString} {pages ? <br /> : ""}
           {pages ? `${pages} pages` : ""} <br />
+          
           <button
             onClick={() => {
               const newBook = new Book(
@@ -134,8 +137,9 @@ export default function AddBookPage() {
                 authorString,
                 itemYear,
                 pages ? pages : null,
-                "",
                 uuid(),
+                "",
+                item.volumeInfo.publisher
               );
               addBook(newBook);
             }}
@@ -146,6 +150,27 @@ export default function AddBookPage() {
       );
       setSearchResults((oldSearch) => [...oldSearch, itemElement]);
     });
+  }
+
+  const handleFormSubmit = async (event: any) => {
+    event.preventDefault();
+    const newBook = new Book(
+      event.currentTarget.bookTitle.value,
+      event.currentTarget.author.value,
+      event.currentTarget.year.value,
+      event.currentTarget.pages.value,
+      uuid(),
+      // Additional Parameters
+      event.currentTarget.edition.value,
+      event.currentTarget.publisher.value,
+      event.currentTarget.container.value,
+      event.currentTarget.volume.value,
+      event.currentTarget.number.value
+    );
+    // DEBUG
+    console.log(newBook)
+    await addBook(newBook);
+    setPage(<LibraryPage />);
   }
 
   return (
@@ -170,19 +195,7 @@ export default function AddBookPage() {
       </div>
       <hr />
       <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          const newBook = new Book(
-            event.currentTarget.bookTitle.value,
-            event.currentTarget.author.value,
-            event.currentTarget.year.value,
-            event.currentTarget.pages.value,
-            event.currentTarget.edition.value,
-            uuid(),
-          );
-          addBook(newBook);
-          setPage(<LibraryPage />);
-        }}
+        onSubmit={(e) => handleFormSubmit(e)}
       >
         <p>Title *</p>
         <input name="bookTitle" type="text" required></input>
@@ -190,20 +203,41 @@ export default function AddBookPage() {
         <p>Author(s)</p>
         <input name="author" type="text"></input>
         <br />
-        <div className="yearpageflex">
-          <div className="year">
+        <div className="dualinputflex">
+          <div className="left">
             <p>Year Published</p>
             <input name="year" type="number"></input>
           </div>
-          <div className="page">
+          <div className="right">
             <p>Pages</p>
             <input name="pages" type="number"></input>
           </div>
         </div>
-        <br />
-        <p>Edition Number/Title</p>
+
+        <p>Edition / Version</p>
         <input name="edition" type="text"></input>
         <br />
+        
+        <div className="dualinputflex">
+          <div className="left">
+            <p>Publisher</p>
+            <input name="publisher" type="text"></input>
+          </div>
+          <div className="right">
+            <p>Container</p>
+            <input name="container" type="text"></input>
+          </div>
+        </div>
+        <div className="dualinputflex">
+          <div className="left">
+            <p>Volume</p>
+            <input name="volume" type="text"></input>
+          </div>
+          <div className="right">
+            <p>No.</p>
+            <input name="number" type="text"></input>
+          </div>
+        </div>
         <div className="flexbuttons">
           <button className="submitBtn" type="submit">
             Submit Entry

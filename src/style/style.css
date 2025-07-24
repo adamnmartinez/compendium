@@ -122,7 +122,7 @@ a:hover {
   width: 100px;
 }
 .libraryPage button.bookOperations.deleteBtn {
-  background-color: #fedada;
+  background-color: rgb(253.6428571429, 218.3571428571, 218.3571428571);
 }
 .libraryPage button.bookOperations.deleteBtn:hover {
   background-color: rgb(250, 120, 120);
@@ -137,13 +137,13 @@ a:hover {
   margin-top: 10px;
 }
 .libraryPage button.addBookBtn {
-  background-color: #e9fce9;
+  background-color: rgb(233.1496062992, 251.8503937008, 233.1496062992);
 }
 .libraryPage button.addBookBtn:hover {
   background-color: rgb(144, 239, 144);
 }
 .libraryPage button.logoutBtn {
-  background-color: #fedada;
+  background-color: rgb(253.6428571429, 218.3571428571, 218.3571428571);
 }
 .libraryPage button.logoutBtn:hover {
   background-color: rgb(250, 120, 120);
@@ -231,7 +231,7 @@ a:hover {
   border-width: 1px;
   border-style: solid;
   padding: 10px;
-  background-color: #e9fce9;
+  background-color: rgb(233.1496062992, 251.8503937008, 233.1496062992);
 }
 .addBookPage ul li button:hover,
 .editBookPage ul li button:hover {
@@ -251,7 +251,7 @@ a:hover {
 }
 .addBookPage button.submitBtn,
 .editBookPage button.submitBtn {
-  background-color: #e9fce9;
+  background-color: rgb(233.1496062992, 251.8503937008, 233.1496062992);
   margin-right: 10px;
 }
 .addBookPage button.submitBtn:hover,
@@ -262,18 +262,18 @@ a:hover {
 .editBookPage button.cancelBtn:hover {
   background-color: rgb(255, 255, 255);
 }
-.addBookPage .yearpageflex,
-.editBookPage .yearpageflex {
+.addBookPage .dualinputflex,
+.editBookPage .dualinputflex {
   display: flex;
 }
-.addBookPage .yearpageflex .year,
-.editBookPage .yearpageflex .year {
+.addBookPage .dualinputflex .left,
+.editBookPage .dualinputflex .left {
   margin-right: 10px;
 }
-.addBookPage .yearpageflex .year,
-.addBookPage .yearpageflex .page,
-.editBookPage .yearpageflex .year,
-.editBookPage .yearpageflex .page {
+.addBookPage .dualinputflex .left,
+.addBookPage .dualinputflex .right,
+.editBookPage .dualinputflex .left,
+.editBookPage .dualinputflex .right {
   flex: 1;
 }
 @media (max-width: 450px) {
@@ -288,6 +288,12 @@ a:hover {
   }
 }
 
+.bookNotesPage .additionalData {
+  margin-top: 5px;
+}
+.bookNotesPage .additionalData .infoHeader {
+  font-size: 14px;
+}
 .bookNotesPage input,
 .bookNotesPage textarea {
   width: 100%;
@@ -366,7 +372,7 @@ a:hover {
   background-color: white;
 }
 .bookNotesPage .flexbuttons button.confirmBtn {
-  background-color: #e9fce9;
+  background-color: rgb(233.1496062992, 251.8503937008, 233.1496062992);
   margin-right: 10px;
 }
 .bookNotesPage .flexbuttons button.confirmBtn:hover {
@@ -376,7 +382,7 @@ a:hover {
   margin-right: 10px;
 }
 .bookNotesPage .flexbuttons button.resetBtn {
-  background-color: #fedada;
+  background-color: rgb(253.6428571429, 218.3571428571, 218.3571428571);
 }
 .bookNotesPage .flexbuttons button.resetBtn:hover {
   background-color: rgb(250, 120, 120);
@@ -413,7 +419,7 @@ a:hover {
   background-color: white;
 }
 .bookNotesPage .noteList button.deleteBtn {
-  background-color: #fedada;
+  background-color: rgb(253.6428571429, 218.3571428571, 218.3571428571);
 }
 .bookNotesPage .noteList button.deleteBtn:hover {
   background-color: rgb(250, 120, 120);
@@ -436,7 +442,7 @@ a:hover {
   background-color: white;
 }
 .bookNotesPage .citationForm button.generateBtn {
-  background-color: #bdf5bd;
+  background-color: rgb(188.5748031496, 245.4251968504, 188.5748031496);
 }
 .bookNotesPage .citationForm button.generateBtn:hover {
   background-color: rgb(144, 239, 144);
@@ -447,7 +453,7 @@ a:hover {
   border-width: 1px;
   padding: 15px;
   border-radius: 5px;
-  background-color: #e6e6e6;
+  background-color: rgb(229.5, 229.5, 229.5);
 }
 
 .noteEditPage form p {
@@ -487,7 +493,7 @@ a:hover {
   margin-top: 10px;
 }
 .noteEditPage form .flexbuttons button.submitBtn {
-  background-color: #e9fce9;
+  background-color: rgb(233.1496062992, 251.8503937008, 233.1496062992);
   margin-right: 10px;
 }
 .noteEditPage form .flexbuttons button.submitBtn:hover {

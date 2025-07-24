@@ -25,13 +25,14 @@ export default function BookList(props: {
             <span className="bookName">
               {book.title}
               {book.publishedYear ? ` (${book.publishedYear})` : ""}{" "}
+              {book.edition ? ` - ${book.edition}` : ""}{" "}
             </span>
             <hr />
             by {book.author ? book.author : "Unknown"} <br />
             {book.pages ? `${book.pages} pages ` : ""}{" "}
             {book.pages ? <br /> : ""}
-            {book.edition ? `Edition ${book.edition} ` : ""}{" "}
-            {book.edition ? <br /> : ""}
+            
+
             <div className="bookButtons">
               <button
                 className="bookOperations"

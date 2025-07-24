@@ -228,6 +228,8 @@ export default function BookNotesPage(props: {
   }
 
   useEffect(() => {
+    // DEBUG
+    console.log(props.book)
     renderNoteList();
   }, []);
 
@@ -242,8 +244,32 @@ export default function BookNotesPage(props: {
         by {props.book.author ? props.book.author : "Unknown"} <br />
         {props.book.pages ? `${props.book.pages} pages` : ""}{" "}
         {props.book.pages ? <br /> : ""}
-        {props.book.edition ? `Edition ${props.book.edition}` : ""}{" "}
-        {props.book.edition ? <br /> : ""}
+        {props.book.container ? 
+          <div className="additionalData">
+            <i className="infoHeader">Source</i>
+            <br></br>
+            {props.book.container}
+            {props.book.volume ? `, Vol. ${props.book.volume}` : ``}
+            {props.book.number ? `, No. ${props.book.number}` : ``} 
+            <br />
+          </div>
+        : ""}
+        {props.book.edition ? 
+          <div className="additionalData">
+            <i className="infoHeader">Edition</i>
+            <br></br>
+            {props.book.edition} 
+            <br />
+          </div>
+        : ""}
+        {props.book.publisher ? 
+          <div className="additionalData">
+            <i className="infoHeader">Publisher</i>
+            <br></br>
+            {props.book.publisher} 
+            <br />
+          </div>
+        : ""}
       </div>
       <br />
       <button className={citeVis ? "revealForm revealed" : "revealForm"} onClick={citeToggle}>

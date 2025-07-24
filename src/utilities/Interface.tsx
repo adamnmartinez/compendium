@@ -4,6 +4,10 @@ class Book {
   publishedYear: number;
   pages: number;
   edition: string;
+  publisher: string;
+  container: string;
+  volume: number;
+  number: number;
   notes: Note[];
   uuid: string;
   constructor(
@@ -11,16 +15,26 @@ class Book {
     author: string,
     publishedYear: number,
     pages: number,
-    edition: string,
     uuid: string,
+    edition?: string,
+    publisher?: string,
+    container?: string,
+    volume?: number,
+    number?: number, 
   ) {
     this.title = title;
     this.author = author;
     this.publishedYear = publishedYear;
     this.pages = pages;
-    this.edition = edition;
-    this.notes = [];
     this.uuid = uuid;
+
+    this.edition = edition || "";
+    this.publisher = publisher || "";
+    this.container = container || "";
+    this.volume = volume || 0,
+    this.number = number || 0,
+
+    this.notes = [];
   }
 } // Book Class Definition
 
