@@ -127,16 +127,13 @@ a:hover {
 .libraryPage button.bookOperations.deleteBtn:hover {
   background-color: rgb(250, 120, 120);
 }
-.libraryPage button.addBookBtn,
-.libraryPage button.logoutBtn,
-.libraryPage button.reloadBtn {
+.libraryPage button.addBookBtn, .libraryPage button.logoutBtn, .libraryPage button.reloadBtn {
   width: 100%;
   padding-top: 3px;
   padding-bottom: 3px;
   font-size: 1.2rem;
 }
-.libraryPage button.reloadBtn,
-.libraryPage button.logoutBtn {
+.libraryPage button.reloadBtn, .libraryPage button.logoutBtn {
   margin-top: 10px;
 }
 .libraryPage button.addBookBtn {
@@ -338,6 +335,18 @@ a:hover {
 }
 .bookNotesPage button.revealForm.revealed {
   background-color: rgb(255, 255, 255);
+}
+.bookNotesPage button.citeBtn {
+  background-color: rgb(255, 242.4378378378, 172);
+}
+.bookNotesPage button.citeBtn:hover {
+  background-color: rgb(255, 227, 70);
+}
+.bookNotesPage button.noteBtn {
+  background-color: rgb(233.1496062992, 251.8503937008, 233.1496062992);
+}
+.bookNotesPage button.noteBtn:hover {
+  background-color: rgb(144, 239, 144);
 }
 .bookNotesPage .bookInfo {
   font-size: 1.2rem;
@@ -614,4 +623,4 @@ a:hover {
   .pageWrapper {
     padding: 30px 30px 0px 30px;
   }
-} /*# sourceMappingURL=style.css.map */
+}/*# sourceMappingURL=style.css.map */

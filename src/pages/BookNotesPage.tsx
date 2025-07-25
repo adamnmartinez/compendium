@@ -31,6 +31,10 @@ export default function BookNotesPage(props: { book: Book }) {
   const [pageCount, setPC] = useState<string>("");
   const [DOI, setDOI] = useState<string>("");
   const [DOIAsURL, setDOIAsURL] = useState<boolean>(false);
+  const [showRepub, setShowRepub] = useState<boolean>(false);
+  const [OGYear, setOGYear] = useState<string>("");
+  const [repubBCE, setRepubBCE] = useState<boolean>(false)
+  const [repubEstimate, setRepubEstimate] = useState<boolean>(false)
 
   //@ts-ignore
   const { token, setToken, setPage } = useContext(AppContext);
@@ -285,6 +289,24 @@ export default function BookNotesPage(props: { book: Book }) {
     }
   }
 
+  function handleShowRepub(event: ChangeEvent): void {
+    const target = event.currentTarget as HTMLInputElement;
+    setShowRepub(target.checked);
+    if (target.checked == false) {
+      setOGYear("");
+    }
+  }
+
+  function handleRepubBCE(event: ChangeEvent): void {
+    const target = event.currentTarget as HTMLInputElement;
+    setRepubBCE(target.checked);
+  }
+
+  function handleIsEstimate(event: ChangeEvent): void {
+    const target = event.currentTarget as HTMLInputElement;
+    setRepubEstimate(target.checked);
+  }
+
   function handleShowDOI(event: ChangeEvent): void {
     const target = event.currentTarget as HTMLInputElement;
     setShowDOI(target.checked);
@@ -316,6 +338,12 @@ export default function BookNotesPage(props: { book: Book }) {
     const target = event.currentTarget as HTMLInputElement;
     setDOI(target.value);
   }
+
+  function handleOGYear(event: ChangeEvent): void {
+    const target = event.currentTarget as HTMLInputElement;
+    setOGYear(target.value);
+  }
+
 
   function handleShowURL(event: ChangeEvent): void {
     const target = event.currentTarget as HTMLInputElement;
@@ -392,6 +420,7 @@ export default function BookNotesPage(props: { book: Book }) {
           mlaAuthors += ", et al";
         }
       }
+
       // Parse comma-separated editors string into citation
       let mlaEditors = "";
       if (bk.editors) {
@@ -407,6 +436,7 @@ export default function BookNotesPage(props: { book: Book }) {
           mlaEditors += ", et al.";
         }
       }
+
       // Parse comma-separated translators string into citation
       let mlaTranslators = "";
       if (bk.translators) {
@@ -573,6 +603,7 @@ export default function BookNotesPage(props: { book: Book }) {
           {bk.publisher ? `${bk.publisher}` + ". " : ""}
           {showDOI && DOI && !DOIAsURL ? ` ${DOI}.` : ``}
           {showDOI && DOIAsURL ? ` ${bk.url}.` : ``}
+          {showRepub && OGYear ? ` (Original work published ${repubEstimate ? `ca. ` : ``} ${OGYear}${repubBCE ? ` BCE` : ``})` : ``}
         </>,
       );
     } else {
@@ -630,10 +661,10 @@ export default function BookNotesPage(props: { book: Book }) {
       </div>
       <br />
       <button
-        className={citeVis ? "revealForm revealed" : "revealForm"}
+        className={citeVis ? "revealForm revealed" : "citeBtn revealForm"}
         onClick={citeVis ? () => {} : citeToggle}
       >
-        {citeVis ? "" : "Cite This Source"}
+        {citeVis ? "" : "(NEW) Cite This Source"}
         <form
           className="citationForm"
           style={citeVis ? { display: "block" } : { display: "none" }}
@@ -718,6 +749,42 @@ export default function BookNotesPage(props: { book: Book }) {
           {style == "APA" ? (
             <>
               <input
+                onChange={(e) => handleShowRepub(e)}
+                className="checkbox"
+                type="checkbox"
+              />
+              <label>Cite as republished work</label>
+            </>
+          ) : (
+            ""
+          )}
+          {style == "APA" && showRepub ? (
+            <>
+              <input
+                onChange={(e) => handleRepubBCE(e)}
+                className="checkbox"
+                type="checkbox"
+              />
+              <label>Original Publication in BCE</label>
+            </>
+          ) : (
+            ""
+          )}
+          {style == "APA" && showRepub ? (
+            <>
+              <input
+                onChange={(e) => handleIsEstimate(e)}
+                className="checkbox"
+                type="checkbox"
+              />
+              <label>Original Publication is Estimate</label>
+            </>
+          ) : (
+            ""
+          )}
+          {style == "APA" ? (
+            <>
+              <input
                 onChange={(e) => handleShowDOI(e)}
                 className="checkbox"
                 type="checkbox"
@@ -749,6 +816,16 @@ export default function BookNotesPage(props: { book: Book }) {
           ) : (
             ""
           )}
+          {style == "APA" && showRepub ? (
+            <input
+              className="citationTextInput"
+              type="text"
+              placeholder="Original Publication Year (can be a single year or a range)"
+              onChange={(e) => handleOGYear(e)}
+            ></input>
+          ) : (
+            ""
+          )}
           <button className="generateBtn" onClick={generateCitation}>
             Generate
           </button>
@@ -760,10 +837,10 @@ export default function BookNotesPage(props: { book: Book }) {
       </button>
 
       <button
-        className={formVis ? "revealForm revealed" : "revealForm"}
+        className={formVis ? "revealForm revealed" : "noteBtn revealForm"}
         onClick={formVis ? () => {} : formToggle}
       >
-        { formVis ? `` : `Make a Note +`}
+        { formVis ? `` : `Take a Note +`}
         <form
           className="noteForm"
           hidden={!formVis}
@@ -819,6 +896,9 @@ export default function BookNotesPage(props: { book: Book }) {
           </div>
         </form>
         
+      </button>
+      <button className="revealForm editBtn" onClick={() => setPage(<EditBookPage book={props.book} />)}>
+        Edit Entry
       </button>
       <button className="tolibrary" onClick={() => setPage(<LibraryPage />)}>
         Back to Library
