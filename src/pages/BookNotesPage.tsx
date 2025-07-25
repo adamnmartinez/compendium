@@ -582,7 +582,7 @@ export default function BookNotesPage(props: { book: Book }) {
 
   useEffect(() => {
     renderNoteList();
-  });
+  }, []);
 
   return (
     <div className="bookNotesPage">
@@ -761,66 +761,69 @@ export default function BookNotesPage(props: { book: Book }) {
 
       <button
         className={formVis ? "revealForm revealed" : "revealForm"}
-        onClick={formToggle}
+        onClick={formVis ? () => {} : formToggle}
       >
-        Make a Note +
+        { formVis ? `` : `Make a Note +`}
+        <form
+          className="noteForm"
+          hidden={!formVis}
+          style={formVis ? { display: "block" } : { display: "none" }}
+          onSubmit={(event) => {
+            event.preventDefault();
+            const newNote = new Note(
+              event.currentTarget.noteTitle.value,
+              event.currentTarget.content.value,
+              event.currentTarget.quote.value,
+              event.currentTarget.chapter.value,
+              event.currentTarget.page.value,
+              event.currentTarget.speaker.value,
+              uuid(),
+            );
+            addNote(props.book, newNote);
+            formToggle();
+            setTimeout(() => {
+              renderNoteList();
+            }, 500);
+          }}
+        >
+          <input name="noteTitle" placeholder="Note Title" required></input>
+          <br />
+          <div className="ideaquoteflex">
+            <textarea
+              name="content"
+              className="contentinput"
+              placeholder="Your ideas here. *"
+            ></textarea>
+            <textarea name="quote" placeholder="Relevant text here."></textarea>
+          </div>
+          <div className="pagechapterflex">
+            <input
+              className="chapterinput"
+              name="chapter"
+              placeholder="Chapter/Part/Section"
+            ></input>
+            <input name="page" type="number" placeholder="Page Number"></input>
+          </div>
+          <input name="speaker" placeholder="Speaker"></input>
+          <br />
+          <div className="flexbuttons">
+            <button className="confirmBtn" type="submit">
+              Save
+            </button>
+            <button className="closeBtn" type="button" onClick={formToggle}>
+              Close
+            </button>
+            <button className="resetBtn" type="reset">
+              Clear
+            </button>
+          </div>
+        </form>
+        
       </button>
-      <form
-        className="noteForm"
-        style={formVis ? { display: "block" } : { display: "none" }}
-        onSubmit={(event) => {
-          event.preventDefault();
-          const newNote = new Note(
-            event.currentTarget.noteTitle.value,
-            event.currentTarget.content.value,
-            event.currentTarget.quote.value,
-            event.currentTarget.chapter.value,
-            event.currentTarget.page.value,
-            event.currentTarget.speaker.value,
-            uuid(),
-          );
-          addNote(props.book, newNote);
-          formToggle();
-          setTimeout(() => {
-            renderNoteList();
-          }, 500);
-        }}
-      >
-        <input name="noteTitle" placeholder="Note Title" required></input>
-        <br />
-        <div className="ideaquoteflex">
-          <textarea
-            name="content"
-            className="contentinput"
-            placeholder="Your ideas here. *"
-          ></textarea>
-          <textarea name="quote" placeholder="Relevant text here."></textarea>
-        </div>
-        <div className="pagechapterflex">
-          <input
-            className="chapterinput"
-            name="chapter"
-            placeholder="Chapter/Part/Section"
-          ></input>
-          <input name="page" type="number" placeholder="Page Number"></input>
-        </div>
-        <input name="speaker" placeholder="Speaker"></input>
-        <br />
-        <div className="flexbuttons">
-          <button className="confirmBtn" type="submit">
-            Save
-          </button>
-          <button className="closeBtn" type="button" onClick={formToggle}>
-            Close
-          </button>
-          <button className="resetBtn" type="reset">
-            Clear
-          </button>
-        </div>
-      </form>
       <button className="tolibrary" onClick={() => setPage(<LibraryPage />)}>
-        Back to My Compendium
+        Back to Library
       </button>
+      
       <hr />
       <input placeholder={"Search for notes"} onChange={handleSearch}></input>
       <NoteList

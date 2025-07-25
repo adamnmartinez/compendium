@@ -182,7 +182,7 @@ export default function AddBookPage() {
       <hr />
       <button className="cancelBtn" onClick={() => setPage(<LibraryPage />)}>
         {" "}
-        Back to My Compendium{" "}
+        Back to Library{" "}
       </button>
       <p> Search </p>
       <div className="booksearchwrapper">

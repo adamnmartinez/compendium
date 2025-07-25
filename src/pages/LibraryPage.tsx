@@ -160,7 +160,7 @@ export default function LibraryPage() {
   useEffect(() => {
     console.log("Library: page mounted, triggering user library render...");
     renderUserLibrary();
-  });
+  }, []);
 
   function handleSearch(event: ChangeEvent): void {
     const target = event.currentTarget as HTMLInputElement;
