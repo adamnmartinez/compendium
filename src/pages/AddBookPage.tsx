@@ -12,85 +12,84 @@ export default function AddBookPage() {
   const [searchResults, setSearchResults] = useState<React.ReactElement[]>([]);
 
   //@ts-ignore
-  const { setPage, token, setToken } = useContext(AppContext)
+  const { setPage, token, setToken } = useContext(AppContext);
 
-  function logoutUser(){
-    localStorage.removeItem("token") 
-    setToken("")
-    setPage(<AuthPage />)
+  function logoutUser() {
+    localStorage.removeItem("token");
+    setToken("");
+    setPage(<AuthPage />);
   }
 
   async function addBook(book: Book) {
     try {
-      const response = await uploadBookCall(token, book)
+      const response = await uploadBookCall(token, book);
       if (response.status == 200) {
         Swal.fire({
-          title: 'Book Added',
-          text: 'Want to get started taking notes?',
-          icon: 'success',
+          title: "Book Added",
+          text: "Want to get started taking notes?",
+          icon: "success",
           confirmButtonText: "Let's Go!",
-          denyButtonText: 'Maybe Later...',
-          showDenyButton: true
+          denyButtonText: "Maybe Later...",
+          showDenyButton: true,
         }).then((result) => {
           if (result.isConfirmed) {
-            setPage(<BookNotesPage book={book}/>)
+            setPage(<BookNotesPage book={book} />);
           }
-        })
+        });
       } else if (response.status == 400) {
         Swal.fire({
-          title: 'Invalid Token!',
+          title: "Invalid Token!",
           text: "Looks like your authentication token expired! Try logging in again.",
-          icon: 'error',
+          icon: "error",
           confirmButtonText: "Log me out!",
           denyButtonText: "Keep me logged in.",
-          showDenyButton: true
+          showDenyButton: true,
         }).then((result) => {
           if (result.isConfirmed) {
-            logoutUser()
+            logoutUser();
           }
-        })
+        });
       } else if (response.status == 403) {
         Swal.fire({
-          title: 'Unauthenticated!',
+          title: "Unauthenticated!",
           text: "Looks like you aren't authorized to perform that action, sorry! Try logging in again.",
-          icon: 'error',
+          icon: "error",
           confirmButtonText: "Log me out!",
           denyButtonText: "Keep me logged in.",
-          showDenyButton: true
+          showDenyButton: true,
         }).then((result) => {
           if (result.isConfirmed) {
-            logoutUser()
+            logoutUser();
           }
-        })
+        });
       } else if (response.status == 404) {
         Swal.fire({
-          title: 'Library Not Found!',
+          title: "Library Not Found!",
           text: "Whoops! We couldn't find your library. Try logging in again.",
-          icon: 'error',
+          icon: "error",
           confirmButtonText: "Log me out!",
           denyButtonText: "Keep me logged in.",
-          showDenyButton: true
+          showDenyButton: true,
         }).then((result) => {
           if (result.isConfirmed) {
-            logoutUser()
+            logoutUser();
           }
-        })
+        });
       } else if (response.status == 500) {
         Swal.fire({
-          title: 'Something went wrong...',
+          title: "Something went wrong...",
           text: "Something unexpected caused our servers to fail, please try again later.",
-          icon: 'error',
-          confirmButtonText: "OK"
-        })
+          icon: "error",
+          confirmButtonText: "OK",
+        });
       }
-      
-      console.log("AddBook: Done!")
 
+      console.log("AddBook: Done!");
     } catch {
       console.log("App: an error occured in pushBook");
       return false;
     } finally {
-      setPage(<LibraryPage />)
+      setPage(<LibraryPage />);
     }
     return true;
   }
@@ -107,7 +106,7 @@ export default function AddBookPage() {
     );
     const dataJSON = await response.json();
 
-    console.log(dataJSON)
+    console.log(dataJSON);
 
     setSearchResults([]);
 
@@ -129,7 +128,6 @@ export default function AddBookPage() {
           </p>
           {authorString} {pages ? <br /> : ""}
           {pages ? `${pages} pages` : ""} <br />
-          
           <button
             onClick={() => {
               const newBook = new Book(
@@ -139,7 +137,7 @@ export default function AddBookPage() {
                 pages ? pages : null,
                 uuid(),
                 "",
-                item.volumeInfo.publisher
+                item.volumeInfo.publisher,
               );
               addBook(newBook);
             }}
@@ -166,13 +164,15 @@ export default function AddBookPage() {
       event.currentTarget.container.value,
       event.currentTarget.volume.value,
       event.currentTarget.number.value,
-      event.currentTarget.url.value
+      event.currentTarget.url.value,
+      event.currentTarget.editors,
+      event.currentTarget.translators,
     );
     // DEBUG
-    console.log(newBook)
+    console.log(newBook);
     await addBook(newBook);
     setPage(<LibraryPage />);
-  }
+  };
 
   return (
     <div className="addBookPage">
@@ -195,14 +195,16 @@ export default function AddBookPage() {
         <ul className="booksearchlist">{searchResults}</ul>
       </div>
       <hr />
-      <form
-        onSubmit={(e) => handleFormSubmit(e)}
-      >
+      <form onSubmit={(e) => handleFormSubmit(e)}>
         <p>Title *</p>
         <input name="bookTitle" type="text" required></input>
         <br />
         <p>Author(s)</p>
-        <input name="author" type="text"></input>
+        <input
+          name="author"
+          placeholder={"Author 1, Author 2..."}
+          type="text"
+        ></input>
         <br />
         <div className="dualinputflex">
           <div className="left">
@@ -215,16 +217,31 @@ export default function AddBookPage() {
           </div>
         </div>
         <p>Edition / Version</p>
-        <input name="edition" type="text"></input>
+        <input
+          name="edition"
+          placeholder={`i.e. First Edition`}
+          type="text"
+        ></input>
         <br />
+        <p>Publisher</p>
+        <input name="publisher" type="text"></input>
+        <br></br>
         <div className="dualinputflex">
           <div className="left">
-            <p>Publisher</p>
-            <input name="publisher" type="text"></input>
+            <p>Container</p>
+            <input
+              name="container"
+              placeholder={`Journal Name, Name of Collection...`}
+              type="text"
+            ></input>
           </div>
           <div className="right">
-            <p>Container</p>
-            <input name="container" type="text"></input>
+            <p>Container Authors / Editors</p>
+            <input
+              name="editors"
+              placeholder={"Editor 1, Editor 2..."}
+              type="text"
+            ></input>
           </div>
         </div>
         <div className="dualinputflex">
@@ -239,6 +256,13 @@ export default function AddBookPage() {
         </div>
         <p>URL</p>
         <input name="url" type="text"></input>
+        <br />
+        <p>Translators</p>
+        <input
+          name="translators"
+          placeholder={"Translator 1, Translator 2..."}
+          type="text"
+        ></input>
         <br />
         <div className="flexbuttons">
           <button className="submitBtn" type="submit">

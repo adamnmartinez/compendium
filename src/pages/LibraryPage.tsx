@@ -12,112 +12,117 @@ import BookNotesPage from "./BookNotesPage";
 export default function LibraryPage() {
   const [libQuery, setLibQuery] = useState<string>("");
 
-  //@ts-ignore
-  const { setIsLoading, token, user, setUser, library, setLibrary, setToken, page, setPage } = useContext(AppContext)
-  
-  function logoutUser(){
-    localStorage.removeItem("token") 
-    setToken("")
-    setPage(<AuthPage />)
+  const {
+    setIsLoading,
+    token,
+    user,
+    setUser,
+    library,
+    setLibrary,
+    setToken,
+    setPage,
+  } = useContext(AppContext) as any;
+
+  function logoutUser() {
+    localStorage.removeItem("token");
+    setToken("");
+    setPage(<AuthPage />);
   }
 
   async function delBook(book: Book) {
     Swal.fire({
-      title: 'Delete Book?',
-      text: 'This entry, and all its notes, will be deleted. Are you sure you want to proceed?',
-      icon: 'question',
+      title: "Delete Book?",
+      text: "This entry, and all its notes, will be deleted. Are you sure you want to proceed?",
+      icon: "question",
       confirmButtonText: "I changed my mind!",
-      denyButtonText: 'Reduce it to atoms!',
-      showDenyButton: true
+      denyButtonText: "Reduce it to atoms!",
+      showDenyButton: true,
     }).then(async (result) => {
       if (result.isDenied) {
         try {
-          const response = await deleteBookCall(token, book)
+          const response = await deleteBookCall(token, book);
           if (response.status == 200) {
             Swal.fire({
-              title: 'Book Deleted!',
-              text: 'Adiós, libro.',
-              icon: 'success',
+              title: "Book Deleted!",
+              icon: "success",
               confirmButtonText: "OK",
-            })
+            });
           } else if (response.status == 400) {
             Swal.fire({
-              title: 'Invalid Token!',
+              title: "Invalid Token!",
               text: "Looks like your authentication token expired! Try logging in again.",
-              icon: 'error',
+              icon: "error",
               confirmButtonText: "Log me out!",
               denyButtonText: "Keep me logged in.",
-              showDenyButton: true
+              showDenyButton: true,
             }).then((result) => {
               if (result.isConfirmed) {
-                logoutUser()
+                logoutUser();
               }
-            })
+            });
           } else if (response.status == 403) {
             Swal.fire({
-              title: 'Unauthenticated!',
+              title: "Unauthenticated!",
               text: "Looks like you aren't authorized to perform that action, sorry! Try logging in again.",
-              icon: 'error',
+              icon: "error",
               confirmButtonText: "Log me out!",
               denyButtonText: "Keep me logged in.",
-              showDenyButton: true
+              showDenyButton: true,
             }).then((result) => {
               if (result.isConfirmed) {
-                logoutUser()
+                logoutUser();
               }
-            })
+            });
           } else if (response.status == 404) {
             Swal.fire({
-              title: 'Library Not Found!',
+              title: "Library Not Found!",
               text: "Whoops! We couldn't find your library. Try logging in again.",
-              icon: 'error',
+              icon: "error",
               confirmButtonText: "Log me out!",
               denyButtonText: "Keep me logged in.",
-              showDenyButton: true
+              showDenyButton: true,
             }).then((result) => {
               if (result.isConfirmed) {
-                logoutUser()
+                logoutUser();
               }
-            })
+            });
           } else if (response.status == 500) {
             Swal.fire({
-              title: 'Something went wrong...',
+              title: "Something went wrong...",
               text: "Something unexpected caused our servers to fail, please try again later.",
-              icon: 'error',
-              confirmButtonText: "OK"
-            })
+              icon: "error",
+              confirmButtonText: "OK",
+            });
           }
         } catch {
           console.log("App: an error occured in pushBook");
           return false;
         } finally {
-          renderUserLibrary()
+          renderUserLibrary();
           return true;
         }
       } else {
-        return false
+        return false;
       }
-    })
+    });
   }
 
   async function renderUserLibrary() {
-    console.log("Library: render initatied")
-    setIsLoading(true)
+    console.log("Library: render initatied");
+    setIsLoading(true);
 
     try {
-      const response = await getLibraryCall(token)
-      const data = await response.json()
-      setUser(data.user)
-      
-      let booksFromUser: Book[] = []
+      const response = await getLibraryCall(token);
+      const data = await response.json();
+      setUser(data.user);
 
-      
-      for (let i = 0; i < data.library.length; i++){
-        booksFromUser.push(data.library[i])
+      const booksFromUser: Book[] = [];
+
+      for (let i = 0; i < data.library.length; i++) {
+        booksFromUser.push(data.library[i]);
       }
 
       setLibrary(booksFromUser);
-
     } catch (error) {
       console.log(
         "Library: an error occured while getting user library data in render",
@@ -129,27 +134,33 @@ export default function LibraryPage() {
         confirmButtonText: "Log Out",
         denyButtonText: "Stay Logged In",
         showDenyButton: true,
-        icon: "error"
+        icon: "error",
       }).then((response) => {
         if (response.isConfirmed) {
-          logoutUser()
+          logoutUser();
         }
-      })
+      });
 
-      setLibrary([new Book(
-        "404", "User Library Not Found. Please log out, then log in again.", 0, 0, "", ""
-      )])
+      setLibrary([
+        new Book(
+          "404",
+          "User Library Not Found. Please log out, then log in again.",
+          0,
+          0,
+          "",
+          "",
+        ),
+      ]);
     } finally {
-      setIsLoading(false)
-      console.log("Library: render completed without errors")
+      setIsLoading(false);
+      console.log("Library: render completed without errors");
     }
-  };
+  }
 
   useEffect(() => {
     console.log("Library: page mounted, triggering user library render...");
     renderUserLibrary();
-  }, []);
-
+  });
 
   function handleSearch(event: ChangeEvent): void {
     const target = event.currentTarget as HTMLInputElement;
@@ -180,7 +191,7 @@ export default function LibraryPage() {
       <hr />
       <BookList
         deleteFunc={delBook}
-        editFunc={(book: Book) => setPage(<EditBookPage book={book}/>)}
+        editFunc={(book: Book) => setPage(<EditBookPage book={book} />)}
         notesFunc={(book: Book) => setPage(<BookNotesPage book={book} />)}
         list={library}
         query={libQuery}

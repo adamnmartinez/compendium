@@ -16,8 +16,15 @@ export default class Storage {
       const year = book.publishedYear;
       const pages = book.pages;
       const edition = book.edition;
-      const book_id = book.uuid
-      const bookObject = new Book(bookTitle, author, year, pages, edition, book_id);
+      const book_id = book.uuid;
+      const bookObject = new Book(
+        bookTitle,
+        author,
+        year,
+        pages,
+        edition,
+        book_id,
+      );
       book.notes.forEach((note: Note) => {
         const noteTitle = note.title;
         const content = note.content;
@@ -25,7 +32,7 @@ export default class Storage {
         const chapter = note.chapter;
         const page = note.page;
         const speaker = note.speaker;
-        const note_id = note.uuid
+        const note_id = note.uuid;
         const noteObject = new Note(
           noteTitle,
           content,

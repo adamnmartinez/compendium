@@ -1,6 +1,6 @@
 class Book {
   title: string;
-  author: string;
+  authors: string;
   publishedYear: number;
   pages: number;
   edition: string;
@@ -12,6 +12,8 @@ class Book {
   uuid: string;
   url: string;
   favorite: boolean;
+  editors: string;
+  translators: string;
   constructor(
     title: string,
     author: string,
@@ -22,24 +24,29 @@ class Book {
     publisher?: string,
     container?: string,
     volume?: number,
-    number?: number, 
-    url?: string
+    number?: number,
+    url?: string,
+    editors?: string,
+    translators?: string,
   ) {
     this.title = title;
-    this.author = author;
+    this.authors = author || "";
     this.publishedYear = publishedYear;
     this.pages = pages;
     this.uuid = uuid;
 
-    this.edition = edition || ""
-    this.publisher = publisher || ""
-    this.container = container || ""
-    this.volume = volume || 0
-    this.number = number || 0
-    this.url = url || ""
+    this.edition = edition || "";
+    this.publisher = publisher || "";
+    this.container = container || "";
+    this.volume = volume || 0;
+    this.number = number || 0;
+    this.url = url || "";
 
     this.notes = [];
     this.favorite = false;
+
+    this.editors = editors || "";
+    this.translators = translators || "";
   }
 } // Book Class Definition
 
@@ -70,4 +77,4 @@ class Note {
   }
 } // Note Class Definition
 
-export { Book, Note }
+export { Book, Note };

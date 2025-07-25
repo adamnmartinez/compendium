@@ -11,7 +11,7 @@ $negative_color: rgb(255, 181, 181);
 $delete_color: rgb(250, 120, 120);
 $dark_mode: false;
 $dark_bg: rgb(60, 60, 60);
-$dark_bg2:rgb(47, 47, 47);
+$dark_bg2: rgb(47, 47, 47);
 $dark_bg3: rgb(32, 32, 32);
 $scrollbar_bg: rgb(206, 206, 206);
 $scrollbar_color: rgb(163, 163, 163);
@@ -42,7 +42,6 @@ $scrollbar_color: rgb(163, 163, 163);
     color: white;
     background-color: $dark_bg;
   }
-
 }
 
 header {
@@ -65,7 +64,11 @@ button {
 
 .loadingscreen {
   .dimmer {
-    @if $dark_mode == false { background-color: $light_bg; } @else { background-color: $dark_bg; }
+    @if $dark_mode == false {
+      background-color: $light_bg;
+    } @else {
+      background-color: $dark_bg;
+    }
     position: fixed;
     width: 100%;
     height: 100%;
@@ -80,31 +83,34 @@ button {
     left: 0;
     right: 0;
     top: 30%;
-    
+
     img {
       width: 10%;
       height: 10%;
     }
 
     p {
-      @if $dark_mode == false { color: rgb(0, 0, 0); } @else { color: rgb(255, 255, 255); }
+      @if $dark_mode == false {
+        color: rgb(0, 0, 0);
+      } @else {
+        color: rgb(255, 255, 255);
+      }
     }
-
   }
 }
 
 a {
-    text-decoration: none;
-    @if $dark_mode == false { 
-      color: black;
-    } @else { 
-      color: white
-    }
-    transition: color 250ms;
-    &:hover {
-      color: $delete_color;
-    }
-} 
+  text-decoration: none;
+  @if $dark_mode == false {
+    color: black;
+  } @else {
+    color: white;
+  }
+  transition: color 250ms;
+  &:hover {
+    color: $delete_color;
+  }
+}
 
 // Page Styles
 .libraryPage {
@@ -118,13 +124,13 @@ a {
     font-family: inherit;
     font-size: inherit;
     text-align: center;
-    
-    @if $dark_mode == false { 
+
+    @if $dark_mode == false {
       background-color: white;
-      color: black
-    } @else { 
-        border-style: none;
-      background-color: $dark_bg2; 
+      color: black;
+    } @else {
+      border-style: none;
+      background-color: $dark_bg2;
       color: white;
     }
   }
@@ -161,13 +167,13 @@ a {
     font-size: inherit;
     border-style: solid;
     padding: 10px;
-    
-    @if $dark_mode == false { 
+
+    @if $dark_mode == false {
       background-color: $light_bg2;
-      color: black
-    } @else { 
+      color: black;
+    } @else {
       border-style: none;
-      background-color: $dark_bg2; 
+      background-color: $dark_bg2;
       color: white;
     }
 
@@ -177,7 +183,6 @@ a {
       } @else {
         background-color: $dark_bg3;
       }
-      
     }
 
     &.bookOperations {
@@ -186,11 +191,15 @@ a {
 
       &.deleteBtn {
         background-color: lighten($delete_color, 20%);
-        @if $dark_mode == true {background-color: darken($delete_color, 45%);}  
+        @if $dark_mode == true {
+          background-color: darken($delete_color, 45%);
+        }
 
         &:hover {
           background-color: $delete_color;
-           @if $dark_mode == true {background-color: darken($delete_color, 35%);} 
+          @if $dark_mode == true {
+            background-color: darken($delete_color, 35%);
+          }
         }
       }
     }
@@ -204,25 +213,34 @@ a {
       font-size: 1.2rem;
     }
 
-    &.reloadBtn, &.logoutBtn {
+    &.reloadBtn,
+    &.logoutBtn {
       margin-top: 10px;
     }
 
     &.addBookBtn {
       background-color: lighten($affirmative_color, 20%);
-      @if $dark_mode == true {background-color: darken($affirmative_color, 45%);}
+      @if $dark_mode == true {
+        background-color: darken($affirmative_color, 45%);
+      }
       &:hover {
         background-color: $affirmative_color;
-        @if $dark_mode == true {background-color: darken($affirmative_color, 35%);}
+        @if $dark_mode == true {
+          background-color: darken($affirmative_color, 35%);
+        }
       }
     }
 
     &.logoutBtn {
       background-color: lighten($delete_color, 20%);
-      @if $dark_mode == true {background-color: darken($delete_color, 45%);}  
+      @if $dark_mode == true {
+        background-color: darken($delete_color, 45%);
+      }
       &:hover {
         background-color: $delete_color;
-        @if $dark_mode == true {background-color: darken($delete_color, 35%);}  
+        @if $dark_mode == true {
+          background-color: darken($delete_color, 35%);
+        }
       }
     }
   }
@@ -372,7 +390,6 @@ a {
   .additionalData {
     margin-top: 5px;
     .infoHeader {
-      
       font-size: 14px;
     }
   }
@@ -396,7 +413,7 @@ a {
   }
 
   .citationTextInput {
-    width: 100%
+    width: 100%;
   }
 
   textarea {
@@ -416,15 +433,13 @@ a {
 
   button.revealForm {
     margin-bottom: 10px;
+
     &:hover {
       background-color: white;
     }
     &.revealed {
       background-color: rgb(255, 255, 255);
     }
-
-    
-
   }
 
   .bookInfo {
@@ -559,8 +574,6 @@ a {
 
       border-width: 1px;
       border-radius: 5px;
-      
-      
     }
 
     .citation {
@@ -573,7 +586,6 @@ a {
       text-align: left;
     }
   }
-
 }
 
 .noteEditPage {
@@ -680,12 +692,12 @@ a {
 
 .authPage {
   input {
-    @if $dark_mode == false { 
+    @if $dark_mode == false {
       background-color: rgb(255, 255, 255);
-      color: black
-    } @else { 
-        border-style: none;
-      background-color: $dark_bg2; 
+      color: black;
+    } @else {
+      border-style: none;
+      background-color: $dark_bg2;
       color: white;
     }
     width: 100%;
@@ -703,17 +715,16 @@ a {
 
     &.passwordInput {
       margin-top: 5px;
-      margin-bottom: 15px
+      margin-bottom: 15px;
     }
-
   }
   button {
-    @if $dark_mode == false { 
+    @if $dark_mode == false {
       background-color: $light_bg2;
       color: black;
-    } @else { 
+    } @else {
       border-style: none;
-      background-color: $dark_bg2; 
+      background-color: $dark_bg2;
       color: white;
       border-color: white;
     }
@@ -730,12 +741,13 @@ a {
       } @else {
         background-color: $dark_bg3;
       }
-
     }
     &.submitBtn {
       &:hover {
         background-color: $affirmative_color;
-        @if $dark_mode == true {background-color: darken($affirmative_color, 35%);}
+        @if $dark_mode == true {
+          background-color: darken($affirmative_color, 35%);
+        }
       }
     }
   }

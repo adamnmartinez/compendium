@@ -6,74 +6,71 @@ import { useContext } from "react";
 import AuthPage from "./AuthPage";
 import BookNotesPage from "./BookNotesPage";
 
-export default function EditNotePage(props: {
-  note: Note;
-  book: Book;
-}) {
+export default function EditNotePage(props: { note: Note; book: Book }) {
   //@ts-ignore
-  const { setPage, token, setToken } = useContext(AppContext)
+  const { setPage, token, setToken } = useContext(AppContext);
 
-  async function modifyNote(book: Book, note: Note, newNote: Note) {    
-    function logoutUser(){
-      localStorage.removeItem("token") 
-      setToken("")
-      setPage(<AuthPage />)
+  async function modifyNote(book: Book, note: Note, newNote: Note) {
+    function logoutUser() {
+      localStorage.removeItem("token");
+      setToken("");
+      setPage(<AuthPage />);
     }
 
     try {
-      const response = await modifyNoteCall(token, book, note, newNote)
+      const response = await modifyNoteCall(token, book, note, newNote);
       if (response.status == 200) {
         Swal.fire({
-          title: 'Changes Applied!',
-          icon: 'success',
+          title: "Changes Applied!",
+          icon: "success",
           confirmButtonText: "OK",
-        })
+        });
       } else if (response.status == 400) {
         Swal.fire({
-          title: 'Invalid Token!',
+          title: "Invalid Token!",
           text: "Looks like your authentication token expired! Try logging in again.",
-          icon: 'error',
+          icon: "error",
           confirmButtonText: "Log me out!",
           denyButtonText: "Keep me logged in.",
-          showDenyButton: true
+          showDenyButton: true,
         }).then((result) => {
           if (result.isConfirmed) {
-            logoutUser()
+            logoutUser();
           }
-        })
+        });
       } else if (response.status == 403) {
         Swal.fire({
-          title: 'Unauthenticated!',
+          title: "Unauthenticated!",
           text: "Looks like you aren't authorized to perform that action, sorry! Try logging in again.",
-          icon: 'error',
+          icon: "error",
           confirmButtonText: "Log me out!",
           denyButtonText: "Keep me logged in.",
-          showDenyButton: true
+          showDenyButton: true,
         }).then((result) => {
           if (result.isConfirmed) {
-            logoutUser()
+            logoutUser();
           }
-        })
+        });
       } else if (response.status == 404) {
         Swal.fire({
-          title: 'Library Not Found!',
+          title: "Library Not Found!",
           text: "Whoops! We couldn't find your library. Try logging in again.",
-          icon: 'error',
+          icon: "error",
           confirmButtonText: "Log me out!",
           denyButtonText: "Keep me logged in.",
-          showDenyButton: true
+          showDenyButton: true,
         }).then((result) => {
           if (result.isConfirmed) {
-            logoutUser()
+            logoutUser();
           }
-        })
+        });
       } else if (response.status == 500) {
         Swal.fire({
-          title: 'Something went wrong...',
+          title: "Something went wrong...",
           text: "Something unexpected caused our servers to fail, please try again later.",
-          icon: 'error',
-          confirmButtonText: "OK"
-        })
+          icon: "error",
+          confirmButtonText: "OK",
+        });
       }
     } catch {
       console.log("App: an error occured in modifyNote");
@@ -92,7 +89,7 @@ export default function EditNotePage(props: {
           {props.book.publishedYear ? ` (${props.book.publishedYear})` : ""}
         </span>{" "}
         <br />
-        by {props.book.author ? props.book.author : "Unknown"} <br />
+        by {props.book.authors ? props.book.authors : "Unknown"} <br />
         {props.book.pages ? `${props.book.pages} pages` : ""}{" "}
         {props.book.pages ? <br /> : ""}
         {props.book.edition ? `Edition ${props.book.edition}` : ""}{" "}

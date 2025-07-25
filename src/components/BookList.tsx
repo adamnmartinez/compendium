@@ -12,11 +12,11 @@ export default function BookList(props: {
   const noResults = <li className="noresults">No Results</li>;
 
   for (let i = 0; i < props.list.length; i++) {
-    let book = props.list[i]
+    let book = props.list[i];
 
     if (
       book.title.toLowerCase().includes(props.query.toLowerCase()) ||
-      book.author.toLowerCase().includes(props.query.toLowerCase()) ||
+      book.authors.toLowerCase().includes(props.query.toLowerCase()) ||
       props.query === ""
     ) {
       listElements.push(
@@ -28,11 +28,9 @@ export default function BookList(props: {
               {book.edition ? ` - ${book.edition}` : ""}{" "}
             </span>
             <hr />
-            by {book.author ? book.author : "Unknown"} <br />
+            by {book.authors ? book.authors : "Unknown"} <br />
             {book.pages ? `${book.pages} pages ` : ""}{" "}
             {book.pages ? <br /> : ""}
-            
-
             <div className="bookButtons">
               <button
                 className="bookOperations"
