@@ -105,6 +105,7 @@ export default function EditBookPage(props: {
             event.currentTarget.container.value,
             event.currentTarget.volume.value,
             event.currentTarget.number.value,
+            event.currentTarget.url.value
           );
           updatedEntry.notes = props.book.notes;
           modifyBook(props.book, updatedEntry);
@@ -150,7 +151,6 @@ export default function EditBookPage(props: {
           defaultValue={props.book.edition}
         ></input>
         <br />
-        
         <div className="dualinputflex">
           <div className="left">
             <p>Publisher</p>
@@ -171,6 +171,13 @@ export default function EditBookPage(props: {
             <input name="number" defaultValue={props.book.number > 0 ? props.book.number : ""} type="number"></input>
           </div>
         </div>
+        <p>URL</p>
+        <input
+          name="url"
+          type="text"
+          defaultValue={props.book.url}
+        ></input>
+        <br />
         <div className="flexbuttons">
           <button className="submitBtn" type="submit">
             Save Changes

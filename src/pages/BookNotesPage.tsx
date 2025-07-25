@@ -5,6 +5,7 @@ import { v4 as uuid } from "uuid";
 import NoteList from "../components/NoteList";
 import { AppContext } from "../App";
 import AuthPage from "./AuthPage";
+import EditBookPage from "./EditBookPage";
 import LibraryPage from "./LibraryPage";
 import Swal from "sweetalert2";
 import { uploadNoteCall, deleteNoteCall } from "../utilities/API";
@@ -16,9 +17,17 @@ export default function BookNotesPage(props: {
   const [formVis, setFormVis] = useState<Boolean>(false);
   const [citeVis, setCiteVis] = useState<Boolean>(false);
   const [style, setStyle] = useState<string>("")
-  const [citation, setCitation] = useState<string>("");
+  const [citation, setCitation] = useState(<>Click "Generate" to create a citation.</>);
   const [noteQuery, setNoteQuery] = useState<string>("");
   const [usernotes, setUsernotes] = useState<Note[]>([]);
+
+  // Citations
+  const [showPageCount, setShowPageCount] = useState<boolean>(false)
+  const [pageCount, setPC] = useState<string>("")
+  const [periodical, setPeriodical] = useState<boolean>(false)
+  const [showURL, setShowURL] = useState<boolean>(false)
+  const [showAccessDate, setShowAccessDate] = useState<boolean>(false)
+  const [accessDate, setAccessDate] = useState<string>("")
 
   //@ts-ignore
   const { token, setToken, setPage } = useContext(AppContext)
@@ -217,19 +226,120 @@ export default function BookNotesPage(props: {
     setStyle(target.value)
   }
 
+  function handlePCSelect(event: ChangeEvent): void {
+    const target = event.currentTarget as HTMLInputElement;
+    setShowPageCount(target.checked)
+  }
+
+  function handlePC(event: ChangeEvent): void {
+    const target = event.currentTarget as HTMLInputElement
+    setPC(target.value)
+  }
+
+  function handleAD(event: ChangeEvent): void {
+    const target = event.currentTarget as HTMLInputElement
+    const dateArray = target.value.split("-")
+
+    var months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+
+    const year = dateArray [0]
+    const month = parseInt(dateArray[1])
+    const day = dateArray[2]
+
+    setAccessDate(`${day} ${months[month - 1]} ${year}`)
+  }
+
+  function handleShowAccessDate(event: ChangeEvent): void {
+    const target = event.currentTarget as HTMLInputElement;
+    setShowAccessDate(target.checked)
+    if (target.checked == false) {
+      setAccessDate("")
+    }
+  }
+
+  function handleShowURL(event: ChangeEvent): void {
+    const target = event.currentTarget as HTMLInputElement
+    setShowURL(target.checked)
+    const bk = props.book
+    if (target.checked && (bk.url == "")) {
+        Swal.fire({
+          title: 'Citation Warning',
+          text: `You are requesting a URL for your citation, but no URL is present on this entry. Would you like to edit this entry to set these values?`,
+          confirmButtonText: 'Yes, edit this entry.',
+          denyButtonText: `No, continue with the citation.`,
+          showDenyButton: true,
+          icon: 'question',
+        }
+      ).then((result) => {
+        if (result.isConfirmed) {
+          setPage(<EditBookPage book={props.book}></EditBookPage>)
+        }
+      })
+
+    }
+  }
+
+  function handlePeriodicalSelect(event: ChangeEvent): void {
+    const target = event.currentTarget as HTMLInputElement
+    setPeriodical(target.checked)
+
+    const bk = props.book
+    if (target.checked && (bk.container == "" || bk.volume <= 0 || bk.number <= 0)) {
+        Swal.fire({
+          title: 'Citation Warning',
+          text: `You are requesting a periodical citation, but at least one of the container (i.e. journal), volume, or number is not set. This will likely result in an incomplete citation. Would you like to edit this entry to set these values?`,
+          confirmButtonText: 'Yes, edit this entry.',
+          denyButtonText: `No, continue with the citation.`,
+          showDenyButton: true,
+          icon: 'question',
+        }
+      ).then((result) => {
+        if (result.isConfirmed) {
+          setPage(<EditBookPage book={props.book}></EditBookPage>)
+        }
+      })
+
+    }
+  }
+
   function generateCitation(): void {
+    let bk = props.book
+
+    const authorName = bk.author.split(" ")
+    const authorLN = authorName[1]
+    const authorFN = authorName[0]
+
     if (style == "None") {
-      setCitation("")
+      setCitation(<>Select a style to continue.</>)
       return
+    } else if (style == "MLA") {
+      setCitation(periodical ? 
+        <>
+          {authorLN}, {authorFN}. "{bk.title}." <i>{bk.container ? bk.container + ", " : ", Unknown Journal"}</i>
+          {bk.volume > 0 ? "vol. " + bk.volume + ", " : ""}{bk.number > 0 ? "no. " + bk.volume + ", " : ""}
+          {bk.publishedYear || 'Unknown Year'}
+          {showPageCount && pageCount != "" ? `, pp. ${pageCount}` : ``}
+          {showURL && bk.url != "" ? `, ${bk.url}.` : `.`}
+          {showAccessDate && accessDate != "" ? ` Accessed ${accessDate}.`: ``}
+        </> : <>
+          {authorLN}, {authorFN}. <i>{bk.title}. </i>{bk.edition ? bk.edition + ", " : ""}
+          {bk.publisher ? bk.publisher + ", " : ""}
+          {bk.publishedYear || 'Unknown Year'}
+          {showPageCount && pageCount != "" ? `, pp. ${pageCount}` : ``}
+          {showURL && bk.url != "" ? `, ${bk.url}.` : `.`}
+          {showAccessDate && accessDate != "" ? ` Accessed ${accessDate}.`: ``}
+        </>)
+    } else if (style == "APA") {
+      setCitation(<>Thanks for showing interest in this feature! It's not done yet, but it will be soon, thanks for your patience!</>)
+    } else if (style == "Chicago") {
+      setCitation(<>Thanks for showing interest in this feature! It's not done yet, but it will be soon, thanks for your patience!</>)
+    } else {
+      setCitation(<>Select a style to continue.</>)
     }
     
-    // setCitation(style + " Citation Here")
-    setCitation("Thanks for showing interest in this feature! It's not done yet, but it will be soon, thanks for your patience!")
   }
 
   useEffect(() => {
-    // DEBUG
-    console.log(props.book)
     renderNoteList();
   }, []);
 
@@ -249,8 +359,8 @@ export default function BookNotesPage(props: {
             <i className="infoHeader">Source</i>
             <br></br>
             {props.book.container}
-            {props.book.volume ? `, Vol. ${props.book.volume}` : ``}
-            {props.book.number ? `, No. ${props.book.number}` : ``} 
+            {props.book.volume > 0 ? `, Vol. ${props.book.volume}` : ``}
+            {props.book.number > 0 ? `, No. ${props.book.number}` : ``} 
             <br />
           </div>
         : ""}
@@ -272,28 +382,35 @@ export default function BookNotesPage(props: {
         : ""}
       </div>
       <br />
-      <button className={citeVis ? "revealForm revealed" : "revealForm"} onClick={citeToggle}>
-        Cite This Source
+      <button className={citeVis ? "revealForm revealed" : "revealForm"} onClick={citeVis ? () => {}: citeToggle}>
+        {citeVis ? '' : 'Cite This Source'}
+        <form
+          className="citationForm"
+          style={citeVis ? { display: "block" } : { display: "none" }}
+          onSubmit={(event) => { event.preventDefault(); }}
+        >
+          Select citations style: <br/>
+          <select onChange={handleStyleSelect}>
+            <option value={"None"}> Select a Style</option>
+            <option value={"MLA"}> MLA </option>
+            <option value={"Chicago"}> Chicago </option>
+            <option value={"APA"}> APA </option>
+          </select>
+          <br />
+          { style == "MLA" ? <><input onChange={(e) => handlePCSelect(e)} className="checkbox" type="checkbox"/><label>Include Pages</label></>: ""}
+          { style == "MLA" ? <><input onChange={(e) => handlePeriodicalSelect(e)} className="checkbox" type="checkbox"/><label>Is Periodical</label></>: ""}
+          { style == "MLA" ? <><input onChange={(e) => handleShowURL(e)} className="checkbox" type="checkbox"/><label>Include Entry URL</label></>: ""}
+          { style == "MLA" ? <><input onChange={(e) => handleShowAccessDate(e)} className="checkbox" type="checkbox"/><label>Include Accessed Date</label></>: ""}
+          { style == "MLA" && showPageCount ? <input className="citationTextInput" placeholder="Page Count (12, 13, 14, 36-39, etc.)" onChange={(e) => handlePC(e)}></input> : ""}
+          { style == "MLA" && showAccessDate ? <input className="citationTextInput" type="date" onChange={(e) => handleAD(e)}></input> : ""}
+          <button className="generateBtn" onClick={generateCitation}>Generate</button>
+          <div className="citation" hidden={citation == <></>}>
+            {citation}
+          </div>
+          <button onClick={() => setCiteVis(false)}>Close</button>
+        </form>
       </button>
-      <form
-        className="citationForm"
-        style={citeVis ? { display: "block" } : { display: "none" }}
-        onSubmit={(event) => { event.preventDefault(); }}
-      >
-        Select citations style: <br/>
-        <select onChange={handleStyleSelect}>
-          <option value={"None"}> Select a Style</option>
-          <option value={"MLA"}> MLA </option>
-          <option value={"Chicago"}> Chicago </option>
-          <option value={"APA"}> APA </option>
-        </select>
-        <br />
-        <button className="generateBtn" onClick={generateCitation}>Generate</button>
-        <div className="citation" hidden={citation == ""}>
-          {citation}
-        </div>
-        <button onClick={() => setCiteVis(false)}>Close</button>
-      </form>
+      
       <button className={formVis ? "revealForm revealed" : "revealForm"}  onClick={formToggle}>
         Make a Note +
       </button>

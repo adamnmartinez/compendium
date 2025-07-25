@@ -306,6 +306,13 @@ a:hover {
   margin-bottom: 10px;
   resize: none;
 }
+.bookNotesPage input.checkbox {
+  width: 5%;
+  margin-right: 0;
+}
+.bookNotesPage .citationTextInput {
+  width: 100%;
+}
 .bookNotesPage textarea {
   padding-bottom: 50px;
 }
@@ -327,7 +334,7 @@ a:hover {
   background-color: white;
 }
 .bookNotesPage button.revealForm.revealed {
-  background-color: rgb(197, 197, 197);
+  background-color: rgb(255, 255, 255);
 }
 .bookNotesPage .bookInfo {
   font-size: 1.2rem;
@@ -454,6 +461,7 @@ a:hover {
   padding: 15px;
   border-radius: 5px;
   background-color: rgb(229.5, 229.5, 229.5);
+  text-align: left;
 }
 
 .noteEditPage form p {

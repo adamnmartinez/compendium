@@ -390,6 +390,15 @@ a {
     resize: none;
   }
 
+  input.checkbox {
+    width: 5%;
+    margin-right: 0;
+  }
+
+  .citationTextInput {
+    width: 100%
+  }
+
   textarea {
     padding-bottom: 50px;
   }
@@ -411,7 +420,7 @@ a {
       background-color: white;
     }
     &.revealed {
-      background-color: rgb(197, 197, 197);
+      background-color: rgb(255, 255, 255);
     }
 
     
@@ -561,6 +570,7 @@ a {
       padding: 15px;
       border-radius: 5px;
       background-color: darken(white, 10%);
+      text-align: left;
     }
   }
 

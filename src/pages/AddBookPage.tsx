@@ -165,7 +165,8 @@ export default function AddBookPage() {
       event.currentTarget.publisher.value,
       event.currentTarget.container.value,
       event.currentTarget.volume.value,
-      event.currentTarget.number.value
+      event.currentTarget.number.value,
+      event.currentTarget.url.value
     );
     // DEBUG
     console.log(newBook)
@@ -213,11 +214,9 @@ export default function AddBookPage() {
             <input name="pages" type="number"></input>
           </div>
         </div>
-
         <p>Edition / Version</p>
         <input name="edition" type="text"></input>
         <br />
-        
         <div className="dualinputflex">
           <div className="left">
             <p>Publisher</p>
@@ -238,6 +237,9 @@ export default function AddBookPage() {
             <input name="number" type="text"></input>
           </div>
         </div>
+        <p>URL</p>
+        <input name="url" type="text"></input>
+        <br />
         <div className="flexbuttons">
           <button className="submitBtn" type="submit">
             Submit Entry
